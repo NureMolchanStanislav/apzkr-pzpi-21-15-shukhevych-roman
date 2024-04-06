@@ -1,5 +1,3 @@
-# apz-pzpi-21-4-molchan-stanislav
-
 ПЗПІ-21-4
 
 Молчан Станіслав
