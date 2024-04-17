@@ -1,3 +1,4 @@
+using System.Collections;
 using Application.IRepositories;
 using Microsoft.Extensions.DependencyInjection;
 using Persistence.Database;
@@ -14,6 +15,8 @@ public static class RepositoryExtension
         services.AddScoped<IUsersRepository, UsersRepository>();
         services.AddScoped<IRolesRepository, RolesRepository>();
         services.AddScoped<IRefreshTokensRepository, RefreshTokensRepository>();
+        services.AddScoped<ICollectionsRepository, CollectionsRepository>();
+        services.AddScoped<IItemsRepository, ItemsRepository>();
 
         return services;
     }

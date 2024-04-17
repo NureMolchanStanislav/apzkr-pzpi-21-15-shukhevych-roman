@@ -1,5 +1,6 @@
 using System.Security.Claims;
 using System.Text.RegularExpressions;
+using Application.GlobalInstance;
 using Application.IRepositories;
 using Application.IServices;
 using Application.IServices.Identity;
@@ -113,6 +114,7 @@ public class UsersService : IUserService
         var refreshToken = await AddRefreshToken(user.Id, cancellationToken);
 
         var tokens = GetUserTokens(user, refreshToken);
+        GlobalUser.Id = user.Id;
 
         return tokens;
     }

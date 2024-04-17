@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Text;
 using Application.IServices;
 using Application.IServices.Identity;
@@ -18,6 +19,8 @@ public static class ServicesExtension
         services.AddScoped<IUserService, UsersService>();
         services.AddScoped<ITokenService, TokensService>();
         services.AddScoped<IPasswordHasher, PasswordHasher>();
+        services.AddScoped<ICollectionsService, CollectionsService>();
+        services.AddScoped<IItemsService, ItemsService>();
 
         return services;
     }
