@@ -5,5 +5,5 @@ namespace Application.IRepositories;
 
 public interface IBrandBonusesRepository : IBaseRepository<BrandBonus>
 {
-    
+    Task<BrandBonus> UpdateAsync(BrandBonus brandBonus, CancellationToken cancellationToken);
 }

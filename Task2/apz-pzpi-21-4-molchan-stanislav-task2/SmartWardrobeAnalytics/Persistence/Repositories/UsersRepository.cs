@@ -1,5 +1,6 @@
 using Application.IRepositories;
 using Domain.Entities;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using Persistence.Database;
 using Persistence.Repositories.Base;

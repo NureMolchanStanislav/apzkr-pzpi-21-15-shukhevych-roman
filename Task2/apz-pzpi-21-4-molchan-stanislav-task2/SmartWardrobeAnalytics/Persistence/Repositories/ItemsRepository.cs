@@ -1,6 +1,7 @@
 using Application.IRepositories;
 using Domain.Entities;
 using Domain.Enums;
+using MongoDB.Bson;
 using Persistence.Database;
 using Persistence.Repositories.Base;
 using MongoDB.Driver;
@@ -29,5 +30,16 @@ public class ItemsRepository(MongoDbContext db) : BaseRepository<Item>(db, "Item
             updateDefinition, 
             options, 
             cancellationToken);
+    }
+    
+    public async Task<List<Item>> GetItemsByBrandAndCreatorId(ObjectId brandId, ObjectId creatorId, CancellationToken cancellationToken)
+    {
+        var filter = Builders<Item>.Filter.Eq(item => item.BrandId, brandId) &
+                     Builders<Item>.Filter.Eq(item => item.CreatedById, creatorId) &
+                     Builders<Item>.Filter.Eq(item => item.IsDeleted, false);
+
+        var items = await _collection.Find(filter)
+            .ToListAsync(cancellationToken);
+        return items;
     }
 }

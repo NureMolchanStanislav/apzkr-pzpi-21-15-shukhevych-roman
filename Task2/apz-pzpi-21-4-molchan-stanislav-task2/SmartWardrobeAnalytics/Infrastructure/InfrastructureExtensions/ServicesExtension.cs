@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Text;
+using Application.IRepositories;
 using Application.IServices;
 using Application.IServices.Identity;
 using Infrastructure.Services;
@@ -15,12 +16,15 @@ public static class ServicesExtension
 {
     public static IServiceCollection AddServices(this IServiceCollection services, IConfiguration configuration)
     {
-        
         services.AddScoped<IUserService, UsersService>();
         services.AddScoped<ITokenService, TokensService>();
         services.AddScoped<IPasswordHasher, PasswordHasher>();
         services.AddScoped<ICollectionsService, CollectionsService>();
         services.AddScoped<IItemsService, ItemsService>();
+        services.AddScoped<IBrandsService, BrandsService>();
+        services.AddScoped<IBrandBonusService, BaseBrandBonusService>();
+        services.AddScoped<IOfferService, OffersService>();
+        services.AddScoped<IUsageService, UsagesService>();
 
         return services;
     }
