@@ -17,6 +17,7 @@ public static class RepositoryExtension
         services.AddScoped<IRefreshTokensRepository, RefreshTokensRepository>();
         services.AddScoped<ICollectionsRepository, CollectionsRepository>();
         services.AddScoped<IItemsRepository, ItemsRepository>();
+        services.AddScoped<IBrandsRepository, BrandsRepository>();
 
         return services;
     }

@@ -10,6 +10,8 @@ public static class MapperExtension
     {
         services.AddAutoMapper(Assembly.GetAssembly(typeof(UserProfile)));
         services.AddAutoMapper(Assembly.GetAssembly(typeof(RoleProfile)));
+        services.AddAutoMapper(Assembly.GetAssembly(typeof(BrandProfile)));
+        services.AddAutoMapper(Assembly.GetAssembly(typeof(CollectionProfile)));
 
         return services;
     }
