@@ -25,6 +25,7 @@ public static class ServicesExtension
         services.AddScoped<IBrandBonusService, BaseBrandBonusService>();
         services.AddScoped<IOfferService, OffersService>();
         services.AddScoped<IUsageService, UsagesService>();
+        services.AddScoped<IRFIDTagsService, RFIDTagsService>();
 
         return services;
     }

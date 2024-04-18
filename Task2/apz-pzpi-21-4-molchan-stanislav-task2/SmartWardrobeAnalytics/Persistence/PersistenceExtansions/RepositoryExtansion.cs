@@ -22,6 +22,7 @@ public static class RepositoryExtension
         services.AddScoped<IBrandBonusesRepository, BrandBonusesRepository>();
         services.AddScoped<IOffersRepository, OffersRepository>();
         services.AddScoped<IUsagesRepository, UsagesRepository>();
+        services.AddScoped<IRFIDTagsRepository, RFIDTagsRepository>();
 
         return services;
     }

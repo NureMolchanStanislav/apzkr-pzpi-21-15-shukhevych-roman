@@ -32,6 +32,6 @@ public class RFIDTagsRepository(MongoDbContext db) : BaseRepository<RFIDTag>(db,
 
         var result = await _collection.UpdateOneAsync(filter, update);
         
-        return result.IsAcknowledged && result.ModifiedCount > 0;
+        return true;
     }
 }
