@@ -10,4 +10,6 @@ public interface IItemsRepository : IBaseRepository<Item>
 
     Task<List<Item>> GetItemsByBrandAndCreatorId(ObjectId brandId, ObjectId creatorId,
         CancellationToken cancellationToken);
+
+    Task<List<Item>> GetAllAsync(CancellationToken cancellationToken = default);
 }

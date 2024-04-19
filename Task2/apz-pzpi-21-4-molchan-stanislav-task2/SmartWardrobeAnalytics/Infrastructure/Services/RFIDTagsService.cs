@@ -3,6 +3,7 @@ using Application.IRepositories;
 using Application.IServices;
 using Application.Models.CreateDtos;
 using Application.Models.Dtos;
+using Application.Models.StatisticsDtos;
 using Application.Models.UpdateDtos;
 using Domain.Entities;
 using MongoDB.Bson;
@@ -17,8 +18,9 @@ public class RFIDTagsService : IRFIDTagsService
     private readonly IItemsRepository _itemsRepository;
     private readonly IBrandBonusesRepository _brandBonusesRepository;
     private readonly IOffersRepository _offersRepository;
+    private readonly IUsageHistoryRepository _usageHistoryRepository;
 
-    public RFIDTagsService(IRFIDTagsRepository rfidTagRepository, IUsagesRepository usageRepository, IUsageService usageService, IItemsRepository itemsRepository, IBrandBonusesRepository brandBonusesRepository, IOffersRepository offersRepository)
+    public RFIDTagsService(IRFIDTagsRepository rfidTagRepository, IUsagesRepository usageRepository, IUsageService usageService, IItemsRepository itemsRepository, IBrandBonusesRepository brandBonusesRepository, IOffersRepository offersRepository, IUsageHistoryRepository usageHistoryRepository)
     {
         _rfidTagRepository = rfidTagRepository;
         _usageRepository = usageRepository;
@@ -26,6 +28,7 @@ public class RFIDTagsService : IRFIDTagsService
         _itemsRepository = itemsRepository;
         _brandBonusesRepository = brandBonusesRepository;
         _offersRepository = offersRepository;
+        _usageHistoryRepository = usageHistoryRepository;
     }
 
     public async Task<bool> UpdateTagAndIncrementUsageAsync(RFIDTagStatusUpdate statusUpdate, CancellationToken cancellationToken)
@@ -37,6 +40,14 @@ public class RFIDTagsService : IRFIDTagsService
         
         if (updateSuccessful && statusUpdate.Status)
         {
+            var usageHistory = new UsageHistory
+            {
+                ItemId = tag.ItemId,
+                Event = "Used",
+                CreatedDateUtc = DateTime.UtcNow
+            };
+            await _usageHistoryRepository.AddAsync(usageHistory, cancellationToken);
+            
             await _usageRepository.IncrementTotalCountAsync(tag.ItemId.ToString(), cancellationToken);
             var totalCount = await _usageService.CalculateTotalBrandUsageByUser(item.BrandId.ToString(), cancellationToken);
             

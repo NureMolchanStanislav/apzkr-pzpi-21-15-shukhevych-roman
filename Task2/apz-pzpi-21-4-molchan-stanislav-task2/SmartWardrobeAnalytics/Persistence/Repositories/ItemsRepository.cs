@@ -32,6 +32,11 @@ public class ItemsRepository(MongoDbContext db) : BaseRepository<Item>(db, "Item
             cancellationToken);
     }
     
+    public async Task<List<Item>> GetAllAsync(CancellationToken cancellationToken = default)
+    {
+        return await _collection.Find(_ => true).ToListAsync(cancellationToken);
+    }
+    
     public async Task<List<Item>> GetItemsByBrandAndCreatorId(ObjectId brandId, ObjectId creatorId, CancellationToken cancellationToken)
     {
         var filter = Builders<Item>.Filter.Eq(item => item.BrandId, brandId) &

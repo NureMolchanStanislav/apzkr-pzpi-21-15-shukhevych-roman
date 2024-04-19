@@ -3,6 +3,7 @@ using System.Text;
 using Application.IRepositories;
 using Application.IServices;
 using Application.IServices.Identity;
+using Application.IServices.Statistics;
 using Infrastructure.Services;
 using Infrastructure.Services.Identity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -26,6 +27,7 @@ public static class ServicesExtension
         services.AddScoped<IOfferService, OffersService>();
         services.AddScoped<IUsageService, UsagesService>();
         services.AddScoped<IRFIDTagsService, RFIDTagsService>();
+        services.AddScoped<IStatisticsService, StatisticsService>();
 
         return services;
     }
