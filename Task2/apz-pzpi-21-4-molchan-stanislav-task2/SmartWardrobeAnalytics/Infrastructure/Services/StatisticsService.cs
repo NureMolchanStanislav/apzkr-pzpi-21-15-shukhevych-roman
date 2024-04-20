@@ -113,6 +113,38 @@ public class StatisticsService : IStatisticsService
     
         return combinationsStatistics;
     }
+    
+    public async Task<List<PopularItemStatisticsDto>> GetTopPopularItemsAsync(string brandId, DateTime startDate, DateTime endDate, int topCount, CancellationToken cancellationToken)
+    {
+        var usageHistory = await _usageHistoryRepository.GetPageAsync(1, 500, 
+            u => u.CreatedDateUtc >= startDate && u.CreatedDateUtc <= endDate, cancellationToken);
+        
+        var items = await _itemsRepository.GetPageAsync(1, topCount, 
+            x => x.BrandId == ObjectId.Parse(brandId), cancellationToken);
+        
+        var usageForBrandItems = usageHistory.Where(u => items.Any(i => i.Id == u.ItemId));
+        
+        var groupedByItem = usageForBrandItems
+            .GroupBy(u => u.ItemId)
+            .Select(g => new { ItemId = g.Key, UsageCount = g.Count() })
+            .OrderByDescending(x => x.UsageCount)
+            .Take(topCount);
+        
+        var popularItems = new List<PopularItemStatisticsDto>();
+        foreach (var group in groupedByItem)
+        {
+            var itemName = await GetItemNameByIdAsync(group.ItemId, cancellationToken);
+            popularItems.Add(new PopularItemStatisticsDto { ItemName = itemName, UsageCount = group.UsageCount });
+        }
+
+        return popularItems;
+    }
+
+    private async Task<string> GetItemNameByIdAsync(ObjectId itemId, CancellationToken cancellationToken)
+    {
+        var item = await _itemsRepository.GetOneAsync(x => x.Id == itemId, cancellationToken);
+        return item?.Name;
+    }
 
     private string GetSeason(DateTime date)
     {

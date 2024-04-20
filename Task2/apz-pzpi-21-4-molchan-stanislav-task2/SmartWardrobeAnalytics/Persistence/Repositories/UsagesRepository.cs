@@ -38,7 +38,7 @@ public class UsagesRepository(MongoDbContext db) : BaseRepository<Usages>(db, "U
             ReturnDocument = MongoDB.Driver.ReturnDocument.After
         };
 
-        return await this._collection.FindOneAndUpdateAsync(MongoDB.Driver.Builders<Usages>.Filter.Eq(u => u.Id, ObjectId.Parse(id)),
+        return await this._collection.FindOneAndUpdateAsync(MongoDB.Driver.Builders<Usages>.Filter.Eq(u => u.ItemId, ObjectId.Parse(id)),
             updateDefinition,
             options,
             cancellationToken);

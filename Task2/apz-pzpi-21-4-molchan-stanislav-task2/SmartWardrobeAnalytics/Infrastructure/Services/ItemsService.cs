@@ -1,3 +1,4 @@
+using Application.GlobalInstance;
 using Application.IRepositories;
 using Application.IServices;
 using Application.Models.CreateDtos;
@@ -32,6 +33,7 @@ public class ItemsService : IItemsService
     public async Task<ItemDto> CreateItemAsync(ItemCreateDto dto, CancellationToken cancellationToken)
     {
         var item = _mapper.Map<Item>(dto);
+        item.CreatedById = GlobalUser.Id;
         item.CreatedDateUtc = DateTime.UtcNow;
 
         await _itemsRepository.AddAsync(item, cancellationToken);

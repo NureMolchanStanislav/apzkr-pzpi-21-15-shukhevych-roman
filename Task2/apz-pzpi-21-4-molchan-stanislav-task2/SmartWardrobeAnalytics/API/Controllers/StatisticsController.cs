@@ -35,4 +35,11 @@ public class StatisticsController : ControllerBase
         var statistics = await _statisticsService.GetItemCombinationsStatisticsAsync(cancellationToken);
         return Ok(statistics);
     }
+    
+    [HttpGet("popular-items")]
+    public async Task<ActionResult<List<PopularItemStatisticsDto>>> GetTopPopularItemsAsync(string brandId, DateTime startDate, DateTime endDate, int topCount, CancellationToken cancellationToken)
+    {
+        var topPopularItems = await _statisticsService.GetTopPopularItemsAsync(brandId, startDate, endDate, topCount, cancellationToken);
+        return Ok(topPopularItems);
+    }
 }

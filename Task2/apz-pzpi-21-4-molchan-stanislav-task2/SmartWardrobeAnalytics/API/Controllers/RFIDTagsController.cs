@@ -16,7 +16,7 @@ public class RFIDTagsController : ControllerBase
         _rfidTagsService = rfidTagsService;
     }
 
-    [HttpPost("updateStatus")]
+    [HttpPut("updateStatus")]
     public async Task<IActionResult> UpdateTagAndIncrementUsage([FromBody] RFIDTagStatusUpdate statusUpdate, CancellationToken cancellationToken)
     {
         if (statusUpdate == null || string.IsNullOrEmpty(statusUpdate.Id))

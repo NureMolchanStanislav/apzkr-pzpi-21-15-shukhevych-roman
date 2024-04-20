@@ -9,4 +9,7 @@ public interface IStatisticsService
         CancellationToken cancellationToken);
     
     Task<List<CombinationStatisticsDto>> GetItemCombinationsStatisticsAsync(CancellationToken cancellationToken);
+
+    Task<List<PopularItemStatisticsDto>> GetTopPopularItemsAsync(string brandId, DateTime startDate, DateTime endDate,
+        int topCount, CancellationToken cancellationToken);
 }
