@@ -1,12 +1,13 @@
 using Domain.Common;
+using MongoDB.Bson;
 
 namespace Domain.Entities;
 
 public class Usages : EntityBase
 {
-    public string EventType { get; set; }
+    public string LastEvent { get; set; }
     
-    public string LastValue { get; set; }
+    public int TotalCount { get; set; }
     
-    public int Count { get; set; }
+    public ObjectId ItemId { get; set; }
 }

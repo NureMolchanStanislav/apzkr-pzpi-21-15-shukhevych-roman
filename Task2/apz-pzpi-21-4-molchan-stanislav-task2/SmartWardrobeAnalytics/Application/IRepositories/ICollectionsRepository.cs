@@ -5,5 +5,5 @@ namespace Application.IRepositories;
 
 public interface ICollectionsRepository : IBaseRepository<Collection>
 {
-    
+    Task<Collection> UpdateAsync(Collection collection, CancellationToken cancellationToken);
 }
