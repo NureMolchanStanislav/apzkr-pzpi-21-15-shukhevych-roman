@@ -31,14 +31,25 @@ public class RFIDTagsService : IRFIDTagsService
         _usageHistoryRepository = usageHistoryRepository;
     }
 
-    public async Task<bool> UpdateTagAndIncrementUsageAsync(RFIDTagStatusUpdate statusUpdate, CancellationToken cancellationToken)
+    public async Task<bool> CheckForExistById(string id, CancellationToken cancellationToken)
     {
-        var objectId = ObjectId.Parse(statusUpdate.Id);
-        var updateSuccessful = await _rfidTagRepository.UpdateStatus(statusUpdate, cancellationToken);
-        var tag = await _rfidTagRepository.GetOneAsync(ObjectId.Parse(statusUpdate.Id), cancellationToken);
+        var tag = await _rfidTagRepository.GetOneAsync(x=>x.TagId == id, cancellationToken);
+        
+        if (tag==null)
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    public async Task<bool> UpdateTagAndIncrementUsageAsync(string tagId, CancellationToken cancellationToken)
+    {
+        var updateSuccessful = await _rfidTagRepository.UpdateStatus(tagId, cancellationToken);
+        var tag = await _rfidTagRepository.GetOneAsync(x=>x.TagId== tagId, cancellationToken);
         var item = await _itemsRepository.GetOneAsync(x => x.Id == tag.ItemId, cancellationToken);
         
-        if (updateSuccessful && statusUpdate.Status)
+        if (updateSuccessful)
         {
             var usageHistory = new UsageHistory
             {
@@ -73,9 +84,9 @@ public class RFIDTagsService : IRFIDTagsService
     {
         RFIDTag newTag = new RFIDTag
         {
-            ItemId = ObjectId.Parse(createDto.ItemId),
+            TagId = createDto.TagId,
             CreatedDateUtc= DateTime.UtcNow,
-            CreatedById = GlobalUser.Id
+            ItemId = ObjectId.Parse("66219cc7de3bd44321abd882")
         };
 
         await _rfidTagRepository.AddAsync(newTag, cancellationToken);
