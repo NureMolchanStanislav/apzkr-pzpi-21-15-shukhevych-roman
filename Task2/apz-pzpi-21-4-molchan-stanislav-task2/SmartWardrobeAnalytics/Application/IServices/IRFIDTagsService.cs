@@ -6,7 +6,9 @@ namespace Application.IServices;
 
 public interface IRFIDTagsService
 {
-    Task<bool> UpdateTagAndIncrementUsageAsync(RFIDTagStatusUpdate statusUpdate, CancellationToken cancellationToken);
+    Task<bool> UpdateTagAndIncrementUsageAsync(string tagId, CancellationToken cancellationToken);
     
     Task<RFIDTagDto> CreateRFIDTagAsync(RFIDTagCreateDto createDto, CancellationToken cancellationToken);
+
+    Task<bool> CheckForExistById(string id, CancellationToken cancellationToken);
 }
