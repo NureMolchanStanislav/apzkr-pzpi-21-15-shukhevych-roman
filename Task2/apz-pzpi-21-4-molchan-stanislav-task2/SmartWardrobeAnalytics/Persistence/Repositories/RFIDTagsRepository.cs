@@ -12,26 +12,28 @@ public class RFIDTagsRepository(MongoDbContext db) : BaseRepository<RFIDTag>(db,
 {
     public async Task<bool> GetStatus(string sensorId, CancellationToken cancellationToken)
     {
-        var filter = MongoDB.Driver.Builders<RFIDTag>.Filter.Eq(x => x.Id, ObjectId.Parse(sensorId));
+        var filter = MongoDB.Driver.Builders<RFIDTag>.Filter.Eq(x => x.TagId, sensorId);
         var sensor = await _collection.Find(filter).FirstOrDefaultAsync();
 
-        if (sensor != null)
+        if (sensor.Status)
         {
-            return sensor.Status;
+            return true;
         }
         
         return false;
     }
     
-    public async Task<bool> UpdateStatus(RFIDTagStatusUpdate statusUpdate, CancellationToken cancellationToken)
+    public async Task<bool> UpdateStatus(string tagId, CancellationToken cancellationToken)
     {
-        var filter = MongoDB.Driver.Builders<RFIDTag>.Filter.Eq(x => x.Id, ObjectId.Parse(statusUpdate.Id));
+        bool currentStatus = await GetStatus(tagId, cancellationToken);
+        
+        var filter = MongoDB.Driver.Builders<RFIDTag>.Filter.Eq(x => x.TagId, tagId);
         var update = MongoDB.Driver.Builders<RFIDTag>.Update
-            .Set(x => x.Status, statusUpdate.Status)
+            .Set(x => x.Status, !currentStatus)
             .Set(x => x.LastModifiedDateUtc, DateTime.UtcNow);
 
         var result = await _collection.UpdateOneAsync(filter, update);
         
-        return statusUpdate.Status;
+        return !currentStatus;
     }
 }

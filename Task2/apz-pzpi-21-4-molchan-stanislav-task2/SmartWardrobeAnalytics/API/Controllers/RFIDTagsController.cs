@@ -16,15 +16,16 @@ public class RFIDTagsController : ControllerBase
         _rfidTagsService = rfidTagsService;
     }
 
-    [HttpPut("updateStatus")]
-    public async Task<IActionResult> UpdateTagAndIncrementUsage([FromBody] RFIDTagStatusUpdate statusUpdate, CancellationToken cancellationToken)
+    [HttpGet("{tagId}")]
+    public async Task<bool> CheckForExistById(string tagId, CancellationToken cancellationToken)
     {
-        if (statusUpdate == null || string.IsNullOrEmpty(statusUpdate.Id))
-        {
-            return BadRequest("Invalid RFID tag update data.");
-        }
+        return await _rfidTagsService.CheckForExistById(tagId, cancellationToken);
+    }
 
-        bool updateResult = await _rfidTagsService.UpdateTagAndIncrementUsageAsync(statusUpdate, cancellationToken);
+    [HttpPut("updateStatus/{tagId}")]
+    public async Task<IActionResult> UpdateTagAndIncrementUsage(string tagId, CancellationToken cancellationToken)
+    {
+        bool updateResult = await _rfidTagsService.UpdateTagAndIncrementUsageAsync(tagId, cancellationToken);
 
         if (updateResult)
         {
@@ -39,7 +40,7 @@ public class RFIDTagsController : ControllerBase
     [HttpPost("create")]
     public async Task<IActionResult> CreateRFIDTag([FromBody] RFIDTagCreateDto rfidTagCreateDto, CancellationToken cancellationToken)
     {
-        var result = _rfidTagsService.CreateRFIDTagAsync(rfidTagCreateDto, cancellationToken);
+        var result = await _rfidTagsService.CreateRFIDTagAsync(rfidTagCreateDto, cancellationToken);
 
         return Ok(result);
     }

@@ -31,14 +31,25 @@ public class RFIDTagsService : IRFIDTagsService
         _usageHistoryRepository = usageHistoryRepository;
     }
 
-    public async Task<bool> UpdateTagAndIncrementUsageAsync(RFIDTagStatusUpdate statusUpdate, CancellationToken cancellationToken)
+    public async Task<bool> CheckForExistById(string id, CancellationToken cancellationToken)
     {
-        var objectId = ObjectId.Parse(statusUpdate.Id);
-        var updateSuccessful = await _rfidTagRepository.UpdateStatus(statusUpdate, cancellationToken);
-        var tag = await _rfidTagRepository.GetOneAsync(ObjectId.Parse(statusUpdate.Id), cancellationToken);
+        var tag = await _rfidTagRepository.GetOneAsync(x=>x.TagId == id, cancellationToken);
+        
+        if (tag==null)
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    public async Task<bool> UpdateTagAndIncrementUsageAsync(string tagId, CancellationToken cancellationToken)
+    {
+        var updateSuccessful = await _rfidTagRepository.UpdateStatus(tagId, cancellationToken);
+        var tag = await _rfidTagRepository.GetOneAsync(x=>x.TagId== tagId, cancellationToken);
         var item = await _itemsRepository.GetOneAsync(x => x.Id == tag.ItemId, cancellationToken);
         
-        if (updateSuccessful && statusUpdate.Status)
+        if (updateSuccessful)
         {
             var usageHistory = new UsageHistory
             {
@@ -47,8 +58,16 @@ public class RFIDTagsService : IRFIDTagsService
                 CreatedDateUtc = DateTime.UtcNow
             };
             await _usageHistoryRepository.AddAsync(usageHistory, cancellationToken);
-            
-            await _usageRepository.IncrementTotalCountAsync(tag.ItemId.ToString(), cancellationToken);
+
+            var usages = await _usageRepository.GetOneAsync(x => x.ItemId == item.Id, cancellationToken);
+            if (usages!=null)
+            {
+                await _usageRepository.IncrementTotalCountAsync(tag.ItemId.ToString(), cancellationToken);
+            }
+            if (usages==null)
+            {
+                await _usageRepository.AddAsync(new Usages(){ItemId = item.Id, TotalCount = 1}, cancellationToken);
+            }
             var totalCount = await _usageService.CalculateTotalBrandUsageByUser(item.BrandId.ToString(), cancellationToken);
             
             var brandBonus = await _brandBonusesRepository.GetOneAsync(x => x.BrandId == item.BrandId, cancellationToken);
@@ -73,9 +92,8 @@ public class RFIDTagsService : IRFIDTagsService
     {
         RFIDTag newTag = new RFIDTag
         {
-            ItemId = ObjectId.Parse(createDto.ItemId),
-            CreatedDateUtc= DateTime.UtcNow,
-            CreatedById = GlobalUser.Id
+            TagId = createDto.TagId,
+            CreatedDateUtc= DateTime.UtcNow
         };
 
         await _rfidTagRepository.AddAsync(newTag, cancellationToken);
