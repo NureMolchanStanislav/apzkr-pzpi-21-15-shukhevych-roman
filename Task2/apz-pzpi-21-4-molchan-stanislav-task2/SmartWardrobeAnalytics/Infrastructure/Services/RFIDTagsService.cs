@@ -58,8 +58,16 @@ public class RFIDTagsService : IRFIDTagsService
                 CreatedDateUtc = DateTime.UtcNow
             };
             await _usageHistoryRepository.AddAsync(usageHistory, cancellationToken);
-            
-            await _usageRepository.IncrementTotalCountAsync(tag.ItemId.ToString(), cancellationToken);
+
+            var usages = await _usageRepository.GetOneAsync(x => x.ItemId == item.Id, cancellationToken);
+            if (usages!=null)
+            {
+                await _usageRepository.IncrementTotalCountAsync(tag.ItemId.ToString(), cancellationToken);
+            }
+            if (usages==null)
+            {
+                await _usageRepository.AddAsync(new Usages(){ItemId = item.Id, TotalCount = 1}, cancellationToken);
+            }
             var totalCount = await _usageService.CalculateTotalBrandUsageByUser(item.BrandId.ToString(), cancellationToken);
             
             var brandBonus = await _brandBonusesRepository.GetOneAsync(x => x.BrandId == item.BrandId, cancellationToken);
@@ -85,8 +93,7 @@ public class RFIDTagsService : IRFIDTagsService
         RFIDTag newTag = new RFIDTag
         {
             TagId = createDto.TagId,
-            CreatedDateUtc= DateTime.UtcNow,
-            ItemId = ObjectId.Parse("66219cc7de3bd44321abd882")
+            CreatedDateUtc= DateTime.UtcNow
         };
 
         await _rfidTagRepository.AddAsync(newTag, cancellationToken);
