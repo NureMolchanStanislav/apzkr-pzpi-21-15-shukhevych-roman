@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using API.Controllers.Base;
 using Application.IServices;
 using Application.Models.CreateDtos;
@@ -9,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
 
-[Route("users")]
+[Route("api/users")]
 public class UserController : BaseController 
 {
     private readonly IUserService _userService;
@@ -52,6 +53,14 @@ public class UserController : BaseController
     {
         var users = await _userService.GetUsersPageAsync(pageNumber, pageSize, cancellationToken);
         return Ok(users);
+    }
+    
+    [HttpGet("get")]
+    public async Task<ActionResult<UserDto>> GetCurrentUser(CancellationToken cancellationToken)
+    {
+        var user = await _userService.GetCurrentUserAsync(cancellationToken);
+
+        return user;
     }
 
     [HttpPost("{userId}/roles/{roleName}")]

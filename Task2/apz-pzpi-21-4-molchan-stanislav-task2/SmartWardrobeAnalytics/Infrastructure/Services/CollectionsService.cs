@@ -65,7 +65,7 @@ public class CollectionsService : ICollectionsService
 
     public async Task<PagedList<CollectionDto>> GetCollectionsWithPaginationAsync(int pageNumber, int pageSize, CancellationToken cancellationToken)
     {
-        var collections = await _collectionsRepository.GetPageAsync(pageNumber, pageSize, x=>x.CreatedById == GlobalUser.Id, cancellationToken);
+        var collections = await _collectionsRepository.GetPageAsync(pageNumber, pageSize, cancellationToken);
         var dtos = _mapper.Map<List<CollectionDto>>(collections);
         var totalCount = await _collectionsRepository.GetTotalCountAsync();
 

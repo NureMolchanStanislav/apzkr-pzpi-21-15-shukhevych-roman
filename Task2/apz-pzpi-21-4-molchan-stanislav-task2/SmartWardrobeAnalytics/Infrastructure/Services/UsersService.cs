@@ -40,6 +40,17 @@ public class UsersService : IUserService
         _passwordHasher = passwordHasher;
         _mapper = mapper;
     }
+    
+    public async Task<UserDto> GetCurrentUserAsync(CancellationToken cancellationToken)
+    {
+        var entity = await _usersRepository.GetOneAsync(x=>x.Id==GlobalUser.Id, cancellationToken);
+        if (entity == null)
+        {
+            throw new Exception();
+        }
+        
+        return _mapper.Map<UserDto>(entity);
+    }
 
     public async Task<PagedList<UserDto>> GetUsersPageAsync(int pageNumber, int pageSize, CancellationToken cancellationToken)
     {
