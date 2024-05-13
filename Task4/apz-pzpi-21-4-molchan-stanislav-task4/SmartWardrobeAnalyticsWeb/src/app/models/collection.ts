@@ -5,4 +5,8 @@ export interface Collection {
   }
 
 
-  
+export interface CollectionCreate {
+  name: string
+  description: string
+}
+

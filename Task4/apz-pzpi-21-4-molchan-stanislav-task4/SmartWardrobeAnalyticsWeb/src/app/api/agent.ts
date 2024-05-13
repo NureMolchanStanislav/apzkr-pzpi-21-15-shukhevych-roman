@@ -2,6 +2,10 @@ import axios, { AxiosResponse } from 'axios';
 import { Collection } from '../models/collection';
 import { User, UserFormValues } from '../models/user';
 import { Token } from '../models/identity';
+import { Item } from '../models/item';
+import { Brand } from '../models/brand';
+import { Tag } from '../models/tag';
+import { Offer } from '../models/offer';
 
 const sleep = (delay: number) => {
     return new Promise((resolve) => {
@@ -26,6 +30,39 @@ const requests =
 
 const Collections ={
     list: () => requests.getMapping<Collection[]>("/Collections?pageNumber=1&pageSize=20"),
+    details: (id: string) => requests.get<Collection>(`/Collections/${id}`),
+    create: (collection: Collection) => axios.post<void>(`/Collections`, collection),
+    update: (collection: Collection) => axios.put<void>('/Collections', collection),
+    delete: (id: string) => axios.delete<void>(`/sportcomplexes/delete/${id}`)
+}
+
+const Items ={
+    list: () => requests.getMapping<Item[]>("/Items?pageNumber=1&pageSize=20"),
+    listForCollection: (id: string) => requests.get<Item[]>(`/Items/collection/${id}`),
+    details: (id: string) => requests.get<Item>(`/Items/${id}`),
+    create: (item: Item) => axios.post<void>(`/Items`, item),
+    update: (item: Item) => axios.put<void>('/Items', item),
+    delete: (id: string) => axios.delete<void>(`/Items/${id}`),
+    getMonthlyStatistics: (id: string) => requests.get(`/Statistics/item-statistic/${id}?months=3`),
+    getUsages: (id: string) => requests.get(`/Statistics/item-usages/${id}`)
+}
+
+const Brands ={
+    list: () => requests.getMapping<Brand[]>("/Brands?pageNumber=1&pageSize=500"),
+    details: (id: string) => requests.get<Brand>(`/Brands/${id}`),
+    create: (brand: Brand) => axios.post<void>(`/Brands`, brand),
+    update: (brand: Brand) => axios.put<void>('/Brands', brand),
+    delete: (id: string) => axios.delete<void>(`/Brands/delete/${id}`),
+    getMonthlyStatistics: (id: string) => requests.get(`/Statistics/item-statistic/${id}?months=3`)
+}
+
+const Tags ={
+    list: () => requests.get<Tag[]>("/RFIDTags"),
+    update: (id: string, itemId: string ) => axios.put<void>(`/RFIDTags/update/${id}/${itemId}`),
+}
+
+const Offers ={
+    list: () => requests.get<Offer[]>("/Offers/user-offer"),
 }
 
 
@@ -34,7 +71,7 @@ const Users = {
 }
 
 const Account = {
-    current: () => requests.get('/users/get'),
+    current: () => requests.get<User>('/users/get'),
     login: (user: UserFormValues) => requests.post<Token>('/users/login', user),
     register: (user: UserFormValues) => requests.post<User>('users/register', user),
     ban: (id: string) => requests.delete(`/users/ban/${id}`),
@@ -45,7 +82,11 @@ const agent =
 {
     Collections,
     Users,
-    Account
+    Account,
+    Items,
+    Brands,
+    Tags, 
+    Offers
 }
 
 export default agent;

@@ -2,6 +2,7 @@
 import { observer } from "mobx-react-lite";
 import { Button, Item, ItemContent, ItemDescription, ItemExtra, Segment } from "semantic-ui-react";
 import { useStore } from "../../../app/stores/store";
+import { Link } from "react-router-dom";
 
 
 export default observer (function CollectionList() {
@@ -10,6 +11,7 @@ export default observer (function CollectionList() {
 
     return(
         <Segment>
+            <Button as={Link} to={`/collections/create`} floated='right' content={"Create"} color="black" />
             <Item.Group divided>
                 {collections.map(collection =>(
                     <Item key={collection.id}>
@@ -19,7 +21,8 @@ export default observer (function CollectionList() {
                                 <div>{collection.description}</div>
                             </ItemDescription>
                             <ItemExtra>
-                                <Button floated="right" content="View" color="grey"/>
+                                <Button as={Link} to={`/update/collections/${collection.id}`} color='pink' content='Edit'></Button>
+                                <Button as={Link} to={`/collections/${collection.id}`} floated='right' content={"Items"} color="grey" />
                             </ItemExtra>
                         </ItemContent>
                     </Item>

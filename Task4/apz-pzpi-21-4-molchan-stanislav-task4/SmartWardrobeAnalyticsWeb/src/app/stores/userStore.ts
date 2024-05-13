@@ -20,23 +20,20 @@ export default class UserStore {
         return !! this.user;
     }
 
-    login = async (creds: UserFormValues) =>{
-        // eslint-disable-next-line no-useless-catch
-        try{
-            console.log("TTTTTTUTA");
-            const token = await agent.Account.login(creds);
-            console.log(token.accessToken);
-            store.commonStore.setToken(token.accessToken);
-
-            await this.getUser()
-            
-            router.navigate('/collections')
-            console.log("User: " + this.user?.email);
-        } catch (error) {
-            throw error;
-        }
-
-    }
+    login = async (creds: UserFormValues) => {
+      try {
+          const token = await agent.Account.login(creds);
+          console.log("Token received:", token.accessToken);
+          store.commonStore.setToken(token.accessToken);
+  
+          await this.getUser();
+          
+          router.navigate('/collections');
+      } catch (error) {
+          console.error("Login error:", error);
+          throw error;
+      }
+  }
 
     
     register = async (creds: UserFormValues) =>{
@@ -114,6 +111,7 @@ export default class UserStore {
     getUser = async () => {
         try{
             const user = await agent.Account.current();
+            this.user = user;
             runInAction(() => this.user = user)
             console.log("Current user:" + this.user?.email)
         }catch (error){

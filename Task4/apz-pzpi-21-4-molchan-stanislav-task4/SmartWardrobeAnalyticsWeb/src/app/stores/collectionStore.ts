@@ -30,6 +30,60 @@ export default class CollectionStore
         }
     }
 
+    loadCollection = async (id: string) => {
+
+        this.setLoadingInitial(true);
+        try {
+            const collection = await agent.Collections.details(id);
+            console.log("Отримана колекція: ", collection);
+            runInAction(() => {
+                this.selectedCollection = collection;
+                this.collectionRegistry.set(collection.id, collection);
+            });
+            this.setLoadingInitial(false);
+            return collection;
+        } catch (error) {
+            console.error("Помилка завантаження колекції:", error);
+            this.setLoadingInitial(false);
+        }
+    };
+
+    createCollection = async (collection: Collection) => {
+        this.loading = true;
+        try{
+            await agent.Collections.create(collection);
+            runInAction(()=>{
+                this.collections.push(collection);
+                this.selectedCollection = collection;
+                this.editMode = false;
+                this.loading = false;
+            })
+            await this.loadCollection;
+        } catch (error) {
+            console.log(error);
+            runInAction(() => {
+                this.loading = false;
+            })
+        }
+    }
+
+    updateCollection = async (collection: Collection) => {
+        this.loading = true;
+        try {
+            console.log("Відправка на оновлення колекції:", JSON.stringify(collection));
+            await agent.Collections.update(collection);
+            runInAction(() => {
+                this.collections = [...this.collections.filter(a => a.id !== collection.id), collection]
+                this.selectedCollection = collection;
+                this.editMode = false;
+                this.loading = false;
+            })
+        } catch (error) {
+            console.log(error);
+            this.loading = false;
+        }
+    }
+
     private getCollection = (id: string) => {
         return this.collectionRegistry.get(id);
     }
