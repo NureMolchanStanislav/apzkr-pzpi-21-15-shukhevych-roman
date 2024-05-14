@@ -1,0 +1,17 @@
+{
+    "navbar": {
+      "home": "Home",
+      "myBrands": "My Brands",
+      "newSportComplex": "New Sport Complex",
+      "viewMySportComplexes": "View My Sport Complexes",
+      "myStatistic": "My Statistic",
+      "login": "Login",
+      "signUp": "Sign Up",
+      "myProfile": "My Profile",
+      "logout": "Logout",
+      "reservation": "My Reservation",
+      "export": "Export Data",
+      "users": "Users"
+    }
+}
+  
