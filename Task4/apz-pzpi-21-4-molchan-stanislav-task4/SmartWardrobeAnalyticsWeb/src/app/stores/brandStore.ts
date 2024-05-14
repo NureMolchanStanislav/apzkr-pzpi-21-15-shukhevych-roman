@@ -31,6 +31,23 @@ export default class BrandStore {
         }
     };
 
+    loadForUserBrands = async () => {
+        this.setLoadingInitial(true);
+        try {
+            const brands = await agent.Brands.listByUser();
+            runInAction(() => {
+                this.brands = brands;
+                brands.forEach((brand: Brand) => {
+                    this.brandRegistry.set(brand.id, brand);
+                });
+            });
+            this.setLoadingInitial(false);
+        } catch (error) {
+            console.error("Помилка завантаження брендів:", error);
+            this.setLoadingInitial(false);
+        }
+    };
+
     loadBrand = async (id: string) => {
         this.setLoadingInitial(true);
         try {
@@ -78,6 +95,22 @@ export default class BrandStore {
             });
         } catch (error) {
             console.error("Помилка оновлення бренду:", error);
+            runInAction(() => {
+                this.loading = false;
+            });
+        }
+    };
+
+    deleteBrand = async (id: string) => {
+        this.loading = true;
+        try {
+            await agent.Brands.delete(id);
+            runInAction(() => {
+                this.brands = this.brands.filter(b => b.id !== id);
+                this.loading = false;
+            });
+        } catch (error) {
+            console.error("Error deleting brand:", error);
             runInAction(() => {
                 this.loading = false;
             });

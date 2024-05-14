@@ -1,12 +1,16 @@
+/* eslint-disable react-refresh/only-export-components */
 import { observer } from "mobx-react-lite";
 import { Button, Container, Menu, Dropdown, DropdownMenu } from "semantic-ui-react";
 import 'semantic-ui-css/semantic.min.css';
 import { useEffect } from "react";
 import { useStore } from "../stores/store";
 import { Link } from "react-router-dom";
+import LanguageSelector from "./LanguageSelector";
+import { useTranslation } from "react-i18next";
 
-export default function NavBar() {
+export default observer(function NavBar() {
     const { userStore: { user, logout, isLoggedIn, getUser } } = useStore();
+    const { t } = useTranslation();
 
     useEffect(() => {
         if (isLoggedIn && !user) {
@@ -15,6 +19,7 @@ export default function NavBar() {
     }, [isLoggedIn, user, getUser]);
 
     const handleLogout = () => {
+        console.log(user);
         logout();
         window.location.reload();
     };
@@ -36,9 +41,19 @@ export default function NavBar() {
                     </div>
                     Wardrobe
                 </Menu.Item>
-                <Menu.Item name="Collections"/>
+                {user?.roles.some(role => role.name === 'Business') ? (
+                    <Menu.Item as={Link} to='/brands' name='navbar.myBrands'>
+                        {t('navbar.myBrands')}
+                    </Menu.Item>
+                ) : (
+                    <Menu.Item as={Link} to='/collections' name='Collections' />
+                )}
                 <Menu.Item>
                     <Button positive content='Create collection'/>
+                </Menu.Item>
+                
+                <Menu.Item>
+                    <LanguageSelector/>
                 </Menu.Item>
 
                 {isLoggedIn || user != null ? (
@@ -47,6 +62,20 @@ export default function NavBar() {
                             <DropdownMenu>
                                 <Dropdown.Item as={Link} to={`/user/profile/${user?.id}`} text='My Profile' icon='user' />
                                 <Dropdown.Item as={Link} to={`/user/offers`} text='My Offers' />
+                                {user?.roles.some(role => role.name === 'Business') && (
+                                    <>
+                                        <Dropdown.Item>
+                                            <Dropdown text='Statistics'>
+                                                <DropdownMenu>
+                                                    <Dropdown.Item as={Link} to={`/statistics/combo`} text='Combo Statistics' />
+                                                    <Dropdown.Item as={Link} to={`/statistics/top`} text='Top Statistics' />
+                                                    <Dropdown.Item as={Link} to={`/statistics/seasonal`} text='Seasonal Statistics' />
+                                                </DropdownMenu>
+                                            </Dropdown>
+                                        </Dropdown.Item>
+                                        <Dropdown.Item as={Link} to={`/bonus-system`} text='Bonus System' />
+                                    </>
+                                )}
                                 <Dropdown.Item onClick={handleLogout} text='Logout' />
                             </DropdownMenu>
                         </Dropdown>
@@ -60,4 +89,4 @@ export default function NavBar() {
             </Container>
         </Menu>
     );
-}
+});

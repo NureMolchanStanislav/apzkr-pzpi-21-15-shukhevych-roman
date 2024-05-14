@@ -6,6 +6,8 @@ import ItemStore from "./itemStore";
 import BrandStore from "./brandStore";
 import TagStore from "./tagStore";
 import OfferStore from "./offerStore";
+import StatisticsStore from "./statisticsStore";
+import BonusStore from "./bonusStore";
 
 interface Store{
     collectionStore: CollectionStore,
@@ -14,7 +16,9 @@ interface Store{
     itemStore: ItemStore,
     brandStore: BrandStore,
     tagStore: TagStore,
-    offerStore: OfferStore
+    offerStore: OfferStore,
+    statisticsStore: StatisticsStore,
+    bonusStore: BonusStore,
 }
 
 export const store: Store = {
@@ -24,7 +28,9 @@ export const store: Store = {
     itemStore: new ItemStore(),
     brandStore: new BrandStore(),
     tagStore: new TagStore(),
-    offerStore: new OfferStore()
+    offerStore: new OfferStore(),
+    statisticsStore: new StatisticsStore(),
+    bonusStore: new BonusStore(),
 }
 
 export const StoreContext = createContext(store);

@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import { useStore } from '../../../app/stores/store';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer, Table } from 'recharts';
-import { Segment, Header, Table as SuiTable } from 'semantic-ui-react';
+import { Segment, Header, Table as SuiTable, Checkbox } from 'semantic-ui-react';
 import LoadingComponents from '../../../app/layout/LoadingComponents';
 
 // Define the type for usage statistics data
@@ -27,6 +27,7 @@ export default observer(function ItemUsageStatistics({ itemId }: ItemUsageStatis
   const { itemStore } = useStore();
   const [usageData, setUsageData] = useState<UsageData[] | null>(null);
   const [itemUsages, setItemUsages] = useState<ItemUsageInstance[] | null>(null);
+  const [is24HourFormat, setIs24HourFormat] = useState(true);
 
   useEffect(() => {
     if (itemId && usageData === null) {
@@ -38,9 +39,20 @@ export default observer(function ItemUsageStatistics({ itemId }: ItemUsageStatis
             .then(data => setItemUsages(data))
             .catch(error => console.error("Error loading item usages:", error));
     }
-}, [itemId, itemStore, usageData]);
+  }, [itemId, itemStore, usageData]);
 
-if (!usageData || !itemUsages) return <LoadingComponents content="Loading usage data..." />;
+  const handleFormatChange = () => {
+    setIs24HourFormat(!is24HourFormat);
+  };
+
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return is24HourFormat
+      ? date.toLocaleString('en-GB') // 24-hour format
+      : date.toLocaleString('en-US', { hour12: true }); // AM/PM format
+  };
+
+  if (!usageData || !itemUsages) return <LoadingComponents content="Loading usage data..." />;
 
   // Convert the usage data into a format suitable for recharts
   const chartData = usageData.map(stat => ({
@@ -61,6 +73,14 @@ if (!usageData || !itemUsages) return <LoadingComponents content="Loading usage 
         </BarChart>
       </ResponsiveContainer>
       <Header as='h3'>Item Usage Instances</Header>
+      <Checkbox 
+        toggle 
+        label={`Show time in ${is24HourFormat ? 'AM/PM' : '24-hour'} format`} 
+        checked={is24HourFormat} 
+        onChange={handleFormatChange} 
+        style={{ marginBottom: '1em' }}
+        className="black-toggle"
+      />
       <SuiTable celled>
         <SuiTable.Header>
           <SuiTable.Row>
@@ -72,7 +92,7 @@ if (!usageData || !itemUsages) return <LoadingComponents content="Loading usage 
           {itemUsages.map((usage, index) => (
             <SuiTable.Row key={index}>
               <SuiTable.Cell>{usage.name}</SuiTable.Cell>
-              <SuiTable.Cell>{usage.date}</SuiTable.Cell>
+              <SuiTable.Cell>{formatDate(usage.date)}</SuiTable.Cell>
             </SuiTable.Row>
           ))}
         </SuiTable.Body>

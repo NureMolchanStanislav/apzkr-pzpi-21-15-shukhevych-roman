@@ -6,6 +6,7 @@ import { Item } from '../models/item';
 import { Brand } from '../models/brand';
 import { Tag } from '../models/tag';
 import { Offer } from '../models/offer';
+import { Bonus } from '../models/bonus';
 
 const sleep = (delay: number) => {
     return new Promise((resolve) => {
@@ -48,13 +49,23 @@ const Items ={
 }
 
 const Brands ={
+    listByUser: () => requests.get<Brand[]>("/Brands/by-user"),
     list: () => requests.getMapping<Brand[]>("/Brands?pageNumber=1&pageSize=500"),
     details: (id: string) => requests.get<Brand>(`/Brands/${id}`),
     create: (brand: Brand) => axios.post<void>(`/Brands`, brand),
     update: (brand: Brand) => axios.put<void>('/Brands', brand),
-    delete: (id: string) => axios.delete<void>(`/Brands/delete/${id}`),
+    delete: (id: string) => axios.delete<void>(`/Brands/${id}`),
     getMonthlyStatistics: (id: string) => requests.get(`/Statistics/item-statistic/${id}?months=3`)
 }
+
+const Bonuses = {
+    list: () => requests.get<Bonus[]>('/BrandBonuses'),
+    details: (id: string) => requests.get<Bonus>(`/BrandBonuses/${id}`),
+    create: (bonus: Bonus) => requests.post<void>('/BrandBonuses', bonus),
+    update: (bonus: Bonus) => requests.put<void>(`/BrandBonuses`, bonus),
+    delete: (id: string) => requests.delete<void>(`/BrandBonuses/${id}`)
+};
+
 
 const Tags ={
     list: () => requests.get<Tag[]>("/RFIDTags"),
@@ -78,6 +89,14 @@ const Account = {
     unban: (id: string) => requests.postUrl(`/users/unban/${id}`)
 }
 
+const Statistics = {
+    getComboStatistics: () => requests.get('/Statistics/combo'),
+    getPopularItems: (brandId, startDate, endDate, topCount) => 
+        requests.get(`/Statistics/popular-items?brandId=${brandId}&startDate=${startDate}&endDate=${endDate}&topCount=${topCount}`),
+    getSeasonalItemUsage: (brandId) =>
+        requests.get(`/Statistics/seasonal-item-usage?brandId=${brandId}`)
+}
+
 const agent = 
 {
     Collections,
@@ -86,7 +105,9 @@ const agent =
     Items,
     Brands,
     Tags, 
-    Offers
+    Offers,
+    Statistics,
+    Bonuses
 }
 
 export default agent;

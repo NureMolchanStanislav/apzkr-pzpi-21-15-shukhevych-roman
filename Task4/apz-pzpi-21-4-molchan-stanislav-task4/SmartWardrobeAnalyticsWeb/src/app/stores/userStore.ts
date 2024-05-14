@@ -28,7 +28,13 @@ export default class UserStore {
   
           await this.getUser();
           
-          router.navigate('/collections');
+          runInAction(() => {
+            if (this.user?.roles.some(role => role.name === 'Business')) {
+                router.navigate('/brands');
+            } else {
+                router.navigate('/collections');
+            }
+        });
       } catch (error) {
           console.error("Login error:", error);
           throw error;
