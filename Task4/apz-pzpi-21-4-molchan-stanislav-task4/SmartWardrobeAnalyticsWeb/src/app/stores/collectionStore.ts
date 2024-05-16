@@ -30,6 +30,20 @@ export default class CollectionStore
         }
     }
 
+    loadAllCollections = async () => {
+        this.setLoadingInitial(true);
+        try{
+            const sportComplexes = await agent.Collections.all();
+            runInAction(()=>{
+                this.collections = sportComplexes;
+            })
+            this.setLoadingInitial(false);
+        } catch (error) {
+            console.log(error);
+            this.setLoadingInitial(false);
+        }
+    }
+
     loadCollection = async (id: string) => {
 
         this.setLoadingInitial(true);
@@ -81,6 +95,23 @@ export default class CollectionStore
         } catch (error) {
             console.log(error);
             this.loading = false;
+        }
+    }
+
+
+    deleteCollection = async (id: string) => {
+        this.loading = true;
+        try {
+            await agent.Collections.delete(id);
+            runInAction(() => {
+                this.collections = [...this.collections.filter(a => a.id !== id)];
+                this.loading = false;
+            })
+        } catch (error) {
+            console.log(error);
+            runInAction(()=> {
+                this.loading = false;
+            })
         }
     }
 

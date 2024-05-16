@@ -51,6 +51,10 @@ export default observer(function NavBar() {
                 <Menu.Item>
                     <Button positive content='Create collection'/>
                 </Menu.Item>
+
+                <Menu.Item>
+                    <Button as={Link} to="/admin" content="admin" />
+                </Menu.Item>
                 
                 <Menu.Item>
                     <LanguageSelector/>

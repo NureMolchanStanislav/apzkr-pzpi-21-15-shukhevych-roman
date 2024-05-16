@@ -2,11 +2,12 @@ import axios, { AxiosResponse } from 'axios';
 import { Collection } from '../models/collection';
 import { User, UserFormValues } from '../models/user';
 import { Token } from '../models/identity';
-import { Item } from '../models/item';
+import { Item, PaginatedResult } from '../models/item';
 import { Brand } from '../models/brand';
 import { Tag } from '../models/tag';
 import { Offer } from '../models/offer';
 import { Bonus } from '../models/bonus';
+import { Usage } from '../models/usage';
 
 const sleep = (delay: number) => {
     return new Promise((resolve) => {
@@ -31,6 +32,7 @@ const requests =
 
 const Collections ={
     list: () => requests.getMapping<Collection[]>("/Collections?pageNumber=1&pageSize=20"),
+    all: () => requests.get<Collection[]>("/Collections/all"),
     details: (id: string) => requests.get<Collection>(`/Collections/${id}`),
     create: (collection: Collection) => axios.post<void>(`/Collections`, collection),
     update: (collection: Collection) => axios.put<void>('/Collections', collection),
@@ -38,7 +40,8 @@ const Collections ={
 }
 
 const Items ={
-    list: () => requests.getMapping<Item[]>("/Items?pageNumber=1&pageSize=20"),
+    list: (pageNumber: number, pageSize: number): Promise<PaginatedResult<Item>> =>
+        requests.get<PaginatedResult<Item>>(`/Items?pageNumber=${pageNumber}&pageSize=${pageSize}`),
     listForCollection: (id: string) => requests.get<Item[]>(`/Items/collection/${id}`),
     details: (id: string) => requests.get<Item>(`/Items/${id}`),
     create: (item: Item) => axios.post<void>(`/Items`, item),
@@ -97,6 +100,14 @@ const Statistics = {
         requests.get(`/Statistics/seasonal-item-usage?brandId=${brandId}`)
 }
 
+const Usages = {
+    list: (pageNumber: number, pageSize: number) => requests.get<PaginatedResult<Usage>>(`/Usages?pageNumber=${pageNumber}&pageSize=${pageSize}`),
+    details: (id: string) => requests.get<Usage>(`/usages/${id}`),
+    create: (usage: Usage) => requests.post<void>('/Usages', usage),
+    update: (usage: Usage) => requests.put<void>(`/usages/${usage.id}`, usage),
+    delete: (id: string) => requests.delete<void>(`/usages/${id}`)
+};
+
 const agent = 
 {
     Collections,
@@ -107,7 +118,8 @@ const agent =
     Tags, 
     Offers,
     Statistics,
-    Bonuses
+    Bonuses,
+    Usages
 }
 
 export default agent;

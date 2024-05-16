@@ -7,10 +7,11 @@ import LoadingComponents from "../../../app/layout/LoadingComponents";
 import { useStore } from "../../../app/stores/store";
 
 export default observer(function ItemForm() {
-    const { itemStore, brandStore, collectionStore } = useStore();
+    const { itemStore, brandStore, collectionStore, userStore } = useStore();
     const { selectedItem, loadItem, createItem, updateItem, loading: itemLoading, loadingInitial: itemLoadingInitial } = itemStore;
     const { brands, loadBrands, loading: brandLoading, loadingInitial: brandLoadingInitial } = brandStore;
-    const { collections, loadCollections, loading: collectionLoading, loadingInitial: collectionLoadingInitial } = collectionStore;
+    const { collections, loadCollections, loadAllCollections, loading: collectionLoading, loadingInitial: collectionLoadingInitial } = collectionStore;
+    const { user } = userStore;
     
     const navigate = useNavigate();
     const { id } = useParams();
@@ -27,7 +28,6 @@ export default observer(function ItemForm() {
 
     useEffect(() => {
         if (brands.length === 0) loadBrands();
-        if (collections.length === 0) loadCollections();
         if (id) {
             loadItem(id).then(loadedItem => setItem(loadedItem || {
                 name: '',
@@ -40,7 +40,14 @@ export default observer(function ItemForm() {
                 setError("Failed to load item.");
             });
         }
-    }, [id, loadBrands, loadCollections, loadItem, brands.length, collections.length]);
+
+        // Load collections based on user role
+        if (user?.roles.some(role => role.name === 'Admin')) {
+            loadAllCollections();
+        } else {
+            loadCollections();
+        }
+    }, [id, loadBrands, loadCollections, loadAllCollections, loadItem, brands.length, user]);
 
     function handleSubmit() {
         const dataToSend = id ? {
@@ -52,7 +59,11 @@ export default observer(function ItemForm() {
     
         const action = id ? updateItem : createItem;
         action(dataToSend).then(() => {
-            navigate(`/collections`);
+            if (user?.roles.some(role => role.name === 'Admin')) {
+                navigate('/admin');
+            } else {
+                navigate('/collections');
+            }
         }).catch(err => {
             console.error("Failed to save item:", err);
             setError("Failed to save item. Check your data.");

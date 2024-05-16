@@ -15,3 +15,13 @@ export interface ItemCreate {
     brandId: string
     collectionId: string
 }
+
+export interface PaginatedResult<T> {
+    items: T[];
+    pageNumber: number;
+    pageSize: number;
+    totalPages: number;
+    totalItems: number;
+    hasPreviousPage: boolean;
+    hasNextPage: boolean;
+  }

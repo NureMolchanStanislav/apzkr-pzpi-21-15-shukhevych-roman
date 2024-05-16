@@ -33,7 +33,6 @@ export default observer(function CollectionForm() {
     }, [id, loadCollection]);
 
     function handleSubmit() {
-        // Якщо id не встановлено, видаляємо його з даних, що відправляються
         const dataToSend = id ? {
             id: id,
             name: collection.name,

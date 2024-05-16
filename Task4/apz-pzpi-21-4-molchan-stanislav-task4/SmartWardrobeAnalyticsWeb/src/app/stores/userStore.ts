@@ -40,6 +40,7 @@ export default class UserStore {
           throw error;
       }
   }
+  
 
     
     register = async (creds: UserFormValues) =>{
@@ -57,6 +58,7 @@ export default class UserStore {
         }
 
     }
+    
 
     loadUsers = async () => {
         this.setLoadingInitial(true);

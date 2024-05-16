@@ -17,6 +17,8 @@ import SeasonalItemUsageStatistics from "../../features/statistics/SeasonalItemU
 import BrandForm from "../../features/brands/form/BrandForm";
 import BonusDashboard from "../../features/brandBonuses/list/BonusDashboard";
 import BonusForm from "../../features/brandBonuses/form/BonusForm";
+import AdminPage from "../../features/admin/AdminPage";
+import UsageForm from "../../features/admin/lists/UsageForm";
 
 export const routes: RouteObject[] = [
     {
@@ -52,7 +54,15 @@ export const routes: RouteObject[] = [
 
             { path: "/statistics/combo", element: <ComboStatistics/>},
             { path: "/statistics/top", element: <PopularItemsStatistics/>},
-            { path: "/statistics/seasonal", element: <SeasonalItemUsageStatistics/>}
+            { path: "/statistics/seasonal", element: <SeasonalItemUsageStatistics/>},
+
+            //Usages
+
+            {path: 'create/usage', element: <UsageForm />},
+
+            //Admin
+
+            { path: "admin", element: <AdminPage/>}
         ]
     }
 ]

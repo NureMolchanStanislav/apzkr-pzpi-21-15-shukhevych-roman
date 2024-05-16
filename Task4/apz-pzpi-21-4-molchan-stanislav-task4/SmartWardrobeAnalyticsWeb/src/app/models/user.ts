@@ -9,6 +9,7 @@ export interface User {
     token: string
     firstName: string
     lastName: string
+    isDeleted: boolean
   }
 
 export interface UserFormValues {

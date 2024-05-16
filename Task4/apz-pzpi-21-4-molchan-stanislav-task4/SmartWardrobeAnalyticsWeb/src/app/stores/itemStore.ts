@@ -1,5 +1,5 @@
 import { makeAutoObservable, runInAction } from 'mobx';
-import { Item } from '../models/item';
+import { Item, PaginatedResult } from '../models/item';
 import agent from '../api/agent';
 
 export default class ItemStore {
@@ -9,6 +9,9 @@ export default class ItemStore {
     editMode = false;
     loading = false;
     loadingInitial = false;
+    totalPages = 0;
+    pageNumber = 1;
+    pageSize = 20;
 
     constructor() {
         makeAutoObservable(this);
@@ -17,15 +20,31 @@ export default class ItemStore {
     loadItems = async () => {
         this.setLoadingInitial(true);
         try {
-            const items = await agent.Items.list();
+            const result: PaginatedResult<Item> = await agent.Items.list(this.pageNumber, this.pageSize);
+            console.log("RESULT: ", result)
             runInAction(() => {
-                this.items = items;
+                this.items = result.items;
+                this.totalPages = result.totalPages;
+                this.setLoadingInitial(false);
             });
-            this.setLoadingInitial(false);
         } catch (error) {
             console.error("Помилка завантаження елементів:", error);
             this.setLoadingInitial(false);
         }
+    };
+
+    setPageNumber = (pageNumber: number) => {
+        this.pageNumber = pageNumber;
+        this.loadItems();
+    };
+
+    setPageSize = (pageSize: number) => {
+        this.pageSize = pageSize;
+        this.loadItems();
+    };
+
+    setLoadingInitial = (state: boolean) => {
+        this.loadingInitial = state;
     };
 
     loadItemForCollection = async (id: string) => {
