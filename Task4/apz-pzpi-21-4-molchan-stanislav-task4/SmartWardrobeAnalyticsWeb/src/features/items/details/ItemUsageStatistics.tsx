@@ -5,6 +5,7 @@ import { useStore } from '../../../app/stores/store';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer, Table } from 'recharts';
 import { Segment, Header, Table as SuiTable, Checkbox } from 'semantic-ui-react';
 import LoadingComponents from '../../../app/layout/LoadingComponents';
+import moment from 'moment';
 
 // Define the type for usage statistics data
 interface UsageData {
@@ -46,10 +47,8 @@ export default observer(function ItemUsageStatistics({ itemId }: ItemUsageStatis
   };
 
   const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return is24HourFormat
-      ? date.toLocaleString('en-GB') // 24-hour format
-      : date.toLocaleString('en-US', { hour12: true }); // AM/PM format
+    const format = is24HourFormat ? 'DD/MM/YYYY HH:mm:ss' : 'DD/MM/YYYY h:mm:ss A';
+    return moment(dateString).format(format);
   };
 
   if (!usageData || !itemUsages) return <LoadingComponents content="Loading usage data..." />;
@@ -75,7 +74,7 @@ export default observer(function ItemUsageStatistics({ itemId }: ItemUsageStatis
       <Header as='h3'>Item Usage Instances</Header>
       <Checkbox 
         toggle 
-        label={`Show time in ${is24HourFormat ? 'AM/PM' : '24-hour'} format`} 
+        label={`Show time in ${is24HourFormat ? '24-hour' : 'AM/PM'} format`} 
         checked={is24HourFormat} 
         onChange={handleFormatChange} 
         style={{ marginBottom: '1em' }}

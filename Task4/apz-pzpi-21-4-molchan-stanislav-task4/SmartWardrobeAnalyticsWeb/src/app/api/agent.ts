@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from 'axios';
 import { Collection } from '../models/collection';
-import { User, UserFormValues } from '../models/user';
+import { User, UserFormValues, UserList } from '../models/user';
 import { Token } from '../models/identity';
 import { Item, PaginatedResult } from '../models/item';
 import { Brand } from '../models/brand';
@@ -47,7 +47,7 @@ const Items ={
     create: (item: Item) => axios.post<void>(`/Items`, item),
     update: (item: Item) => axios.put<void>('/Items', item),
     delete: (id: string) => axios.delete<void>(`/Items/${id}`),
-    getMonthlyStatistics: (id: string) => requests.get(`/Statistics/item-statistic/${id}?months=3`),
+    getMonthlyStatistics: (id: string) => requests.get(`/Statistics/item-statistic/${id}?months=10`),
     getUsages: (id: string) => requests.get(`/Statistics/item-usages/${id}`)
 }
 
@@ -82,6 +82,8 @@ const Offers ={
 
 const Users = {
     list: () => requests.getMapping<User[]>("/users?pageNumber=1&pageSize=20"),
+    addToRole: (userId: string, roleName: string) => requests.post<UserList[]>(`/users/${userId}/roles/${roleName}`, {}),
+    removeFromRole: (userId: string, roleName: string) => requests.delete<UserList[]>(`/users/${userId}/roles/${roleName}`),
 }
 
 const Account = {
@@ -106,6 +108,21 @@ const Usages = {
     create: (usage: Usage) => requests.post<void>('/Usages', usage),
     update: (usage: Usage) => requests.put<void>(`/usages/${usage.id}`, usage),
     delete: (id: string) => requests.delete<void>(`/usages/${id}`)
+};
+
+export const exportToCsv = async (collectionName) => {
+    try {
+        const response = await axios.get(`/export/exportCVS/${collectionName}`);
+        const blob = new Blob([response.data], { type: 'text/csv' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `${collectionName}.csv`;
+        a.click();
+        window.URL.revokeObjectURL(url);
+    } catch (error) {
+        console.error('Error exporting to CSV', error);
+    }
 };
 
 const agent = 

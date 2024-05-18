@@ -52,6 +52,7 @@ export default class UserStore {
                 user.roles = user.roles || [];
                 user.roles.push("User")
             })
+            router.navigate('/collections');
             console.log(user);
         } catch (error) {
             throw error;
@@ -102,6 +103,28 @@ export default class UserStore {
           console.error("Error banning user", error);
         }
       };
+
+      addToRole = async (userId: string, roleName: string) => {
+        try {
+            const updatedUsers = await agent.Users.addToRole(userId, roleName);
+            runInAction(() => {
+                this.users = updatedUsers;
+            });
+        } catch (error) {
+            console.error("Error adding user to role", error);
+        }
+    };
+
+    removeFromRole = async (userId: string, roleName: string) => {
+        try {
+            const updatedUsers = await agent.Users.removeFromRole(userId, roleName);
+            runInAction(() => {
+                this.users = updatedUsers;
+            });
+        } catch (error) {
+            console.error("Error removing user from role", error);
+        }
+    };
 
     setLoadingInitial = (state: boolean) => {
         this.loadingInitial = state;

@@ -7,6 +7,7 @@ import UserListAdmin from './lists/UserListAdmin';
 import UsageListAdmin from './lists/UsageListAdmin';
 import CollectionListAdmin from './lists/CollectionListAdmin';
 import BrandListAdmin from './lists/BrandListAdmin';
+import { useTranslation } from 'react-i18next';
 
 const tableOptions = [
     { key: 'collections', text: 'Collections', value: 'collections' },
@@ -22,6 +23,8 @@ const AdminPage = observer(() => {
     const handleTableChange = (e: React.SyntheticEvent<HTMLElement, Event>, { value }: any) => {
         setSelectedTable(value);
     };
+
+    const { t } = useTranslation();
 
     const renderTableComponent = () => {
         switch (selectedTable) {
@@ -43,9 +46,9 @@ const AdminPage = observer(() => {
     return (
         <Container>
             <Segment>
-                <Header as='h2'>Admin Page</Header>
+                <Header as='h2'>{t("admin.page")}</Header>
                 <Dropdown
-                    placeholder='Select Table'
+                    placeholder={t("admin.select")}
                     fluid
                     selection
                     options={tableOptions}

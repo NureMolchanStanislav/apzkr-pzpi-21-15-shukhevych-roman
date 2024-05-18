@@ -7,6 +7,7 @@ import { useStore } from "../stores/store";
 import { Link } from "react-router-dom";
 import LanguageSelector from "./LanguageSelector";
 import { useTranslation } from "react-i18next";
+import { exportToCsv } from "../api/agent";
 
 export default observer(function NavBar() {
     const { userStore: { user, logout, isLoggedIn, getUser } } = useStore();
@@ -23,6 +24,8 @@ export default observer(function NavBar() {
         logout();
         window.location.reload();
     };
+
+    const isAdmin = user?.roles?.some(role => role.name === 'Admin');
 
     return (
         <Menu inverted fixed='top'>
@@ -41,53 +44,78 @@ export default observer(function NavBar() {
                     </div>
                     Wardrobe
                 </Menu.Item>
-                {user?.roles.some(role => role.name === 'Business') ? (
-                    <Menu.Item as={Link} to='/brands' name='navbar.myBrands'>
-                        {t('navbar.myBrands')}
+                {!isAdmin && (
+                    <>
+                        {user?.roles?.some(role => role.name === 'Business') ? (
+                            <Menu.Item as={Link} to='/brands' name='navbar.myBrands'>
+                                {t('navbar.myBrands')}
+                            </Menu.Item>
+                        ) : (
+                            <>
+                                <Menu.Item as={Link} to='/collections' name='Collections'>
+                                    {t('navbar.collections')}
+                                </Menu.Item>
+                                <Menu.Item>
+                                    <Button positive content={t('navbar.createCollection')} />
+                                </Menu.Item>
+                            </>
+                        )}
+                    </>
+                )}
+                {isAdmin && (
+                    <Menu.Item>
+                        <Button as={Link} to="/admin" content={t('navbar.admin')} />
                     </Menu.Item>
-                ) : (
-                    <Menu.Item as={Link} to='/collections' name='Collections' />
+                )}
+
+                {isLoggedIn && user?.roles?.some(role => role.name === 'Admin') && (
+                    <Menu.Item>
+                        <Dropdown text={t('navbar.export')} pointing='top left'>
+                            <Dropdown.Menu>
+                                <Dropdown.Item onClick={() => exportToCsv('Users')}>Users</Dropdown.Item>
+                                <Dropdown.Item onClick={() => exportToCsv('Collections')}>Collections</Dropdown.Item>
+                                <Dropdown.Item onClick={() => exportToCsv('Itmes')}>Itmes</Dropdown.Item>
+                                <Dropdown.Item onClick={() => exportToCsv('Brands')}>Brands</Dropdown.Item>
+                                <Dropdown.Item onClick={() => exportToCsv('RFIDTags')}>RFIDTags</Dropdown.Item>
+                                <Dropdown.Item onClick={() => exportToCsv('BrandBonuses')}>BrandBonuses</Dropdown.Item>
+                                <Dropdown.Item onClick={() => exportToCsv('Usages')}>Usages</Dropdown.Item>
+                                <Dropdown.Item onClick={() => exportToCsv('UsageHistory')}>UsageHistory</Dropdown.Item>
+                            </Dropdown.Menu>
+                        </Dropdown>
+                    </Menu.Item>
                 )}
                 <Menu.Item>
-                    <Button positive content='Create collection'/>
-                </Menu.Item>
-
-                <Menu.Item>
-                    <Button as={Link} to="/admin" content="admin" />
-                </Menu.Item>
-                
-                <Menu.Item>
-                    <LanguageSelector/>
+                    <LanguageSelector />
                 </Menu.Item>
 
                 {isLoggedIn || user != null ? (
                     <Menu.Item position='right'>
                         <Dropdown pointing='top left' text={user?.email}>
                             <DropdownMenu>
-                                <Dropdown.Item as={Link} to={`/user/profile/${user?.id}`} text='My Profile' icon='user' />
-                                <Dropdown.Item as={Link} to={`/user/offers`} text='My Offers' />
-                                {user?.roles.some(role => role.name === 'Business') && (
+                                <Dropdown.Item as={Link} to={`/user/profile/${user?.id}`} text={t('navbar.myProfile')} icon='user' />
+                                <Dropdown.Item as={Link} to={`/user/offers`} text={t('navbar.myOffers')} />
+                                {user?.roles?.some(role => role.name === 'Business') && !isAdmin && (
                                     <>
                                         <Dropdown.Item>
-                                            <Dropdown text='Statistics'>
+                                            <Dropdown text={t('navbar.statistics')}>
                                                 <DropdownMenu>
-                                                    <Dropdown.Item as={Link} to={`/statistics/combo`} text='Combo Statistics' />
-                                                    <Dropdown.Item as={Link} to={`/statistics/top`} text='Top Statistics' />
-                                                    <Dropdown.Item as={Link} to={`/statistics/seasonal`} text='Seasonal Statistics' />
+                                                    <Dropdown.Item as={Link} to={`/statistics/combo`} text={t('navbar.comboStatistics')} />
+                                                    <Dropdown.Item as={Link} to={`/statistics/top`} text={t('navbar.topStatistics')} />
+                                                    <Dropdown.Item as={Link} to={`/statistics/seasonal`} text={t('navbar.seasonalStatistics')} />
                                                 </DropdownMenu>
                                             </Dropdown>
                                         </Dropdown.Item>
-                                        <Dropdown.Item as={Link} to={`/bonus-system`} text='Bonus System' />
+                                        <Dropdown.Item as={Link} to={`/bonus-system`} text={t('navbar.bonusSystem')} />
                                     </>
                                 )}
-                                <Dropdown.Item onClick={handleLogout} text='Logout' />
+                                <Dropdown.Item onClick={handleLogout} text={t('navbar.logout')} />
                             </DropdownMenu>
                         </Dropdown>
                     </Menu.Item>
                 ) : (
                     <Menu.Item position='right'>
-                        <Button as={Link} to="/login" content="Login" />
-                        <Button as={Link} to="/register" content="Register" style={{ marginLeft: '0.5em' }} />
+                        <Button as={Link} to="/login" content={t('navbar.login')} />
+                        <Button as={Link} to="/register" content={t('navbar.register')} style={{ marginLeft: '0.5em' }} />
                     </Menu.Item>
                 )}
             </Container>

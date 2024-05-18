@@ -26,7 +26,15 @@ const CookieConsent = () => {
   }
 
   return (
-    <Segment fixed='bottom' style={{ position: 'fixed', bottom: 10, left: '10%', right: '10%' }}>
+    <Segment
+      style={{
+        position: 'fixed',
+        bottom: '50px', // підняти вікно над футером
+        left: '10%',
+        right: '10%',
+        zIndex: 1000,
+      }}
+    >
       <Message>
         <Message.Header>Кукі та ваша приватність</Message.Header>
         <p>
@@ -34,7 +42,7 @@ const CookieConsent = () => {
           Продовжуючи використовувати наш сайт, ви даєте згоду на нашу політику кукі.
         </p>
         <Button color='green' onClick={handleAccept}>Прийняти</Button>
-        <Button color='green' onClick={handleReject}>Відхилитти</Button>
+        <Button color='red' onClick={handleReject}>Відхилити</Button>
       </Message>
     </Segment>
   );
