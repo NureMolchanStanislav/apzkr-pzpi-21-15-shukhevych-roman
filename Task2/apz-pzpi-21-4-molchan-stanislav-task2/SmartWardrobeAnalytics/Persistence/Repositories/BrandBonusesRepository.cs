@@ -14,6 +14,7 @@ public class BrandBonusesRepository(MongoDbContext db) : BaseRepository<BrandBon
             .Set(c=> c.ConditionalComplexity, brandBonus.ConditionalComplexity)
             .Set(c => c.ConditionalDiscount, brandBonus.ConditionalDiscount)
             .Set(c=> c.ConditionalNumberOfUsages, brandBonus.ConditionalNumberOfUsages)
+            .Set(c=> c.MaxDiscount, brandBonus.MaxDiscount)
             .Set(c => c.LastModifiedDateUtc, brandBonus.LastModifiedDateUtc)
             .Set(c => c.LastModifiedById, brandBonus.LastModifiedById);
 

@@ -26,6 +26,14 @@ public class CollectionsService : ICollectionsService
     {
         return await _collectionsRepository.GetOneAsync(ObjectId.Parse(id), cancellationToken);
     }
+    
+    public async Task<List<CollectionDto>> GetAllAsync(CancellationToken cancellationToken)
+    {
+        var collections =
+            await _collectionsRepository.GetAllAsync(cancellationToken);
+        var dtos = _mapper.Map<List<CollectionDto>>(collections);
+        return dtos;
+    }
 
     public async Task<Collection> CreateCollectionAsync(CollectionCreateDto dto, CancellationToken cancellationToken)
     {

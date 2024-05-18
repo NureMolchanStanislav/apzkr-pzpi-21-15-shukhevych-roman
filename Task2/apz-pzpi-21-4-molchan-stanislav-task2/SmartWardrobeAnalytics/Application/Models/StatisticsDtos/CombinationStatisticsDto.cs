@@ -9,4 +9,6 @@ public class CombinationStatisticsDto
     public List<string> Combination { get; set; }
     
     public int UsageCount { get; set; }
+    
+    public string Date { get; set; }
 }

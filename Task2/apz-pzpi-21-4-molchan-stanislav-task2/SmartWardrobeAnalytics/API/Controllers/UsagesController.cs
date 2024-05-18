@@ -79,4 +79,11 @@ public class UsagesController : ControllerBase
 
         return Ok(totalUsages);
     }
+
+    [HttpGet("totalUsageByItem/{itemId}")]
+    public async Task<ActionResult<int>> GetTotalUsageByItem(string itemId, CancellationToken cancellationToken)
+    {
+        var result = await _usageService.GetTotalUsageByItem(itemId, cancellationToken);
+        return Ok(result);
+    }
 }

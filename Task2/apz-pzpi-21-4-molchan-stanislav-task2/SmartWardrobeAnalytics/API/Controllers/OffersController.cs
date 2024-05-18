@@ -1,5 +1,6 @@
 using Application.IServices;
 using Application.Models.CreateDtos;
+using Application.Models.Dtos;
 using Application.Models.UpdateDtos;
 using Microsoft.AspNetCore.Mvc;
 
@@ -64,5 +65,12 @@ public class OffersController : ControllerBase
     {
         var pagedOffers = await _offerService.GetWithPaginationAsync(pageNumber, pageSize, cancellationToken);
         return Ok(pagedOffers);
+    }
+
+    [HttpGet("user-offer")]
+    public async Task<ActionResult<List<OfferInfo>>> GetForUser(CancellationToken cancellationToken)
+    {
+        var result = await _offerService.GetForUser(cancellationToken);
+        return Ok(result);
     }
 }

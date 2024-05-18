@@ -24,6 +24,13 @@ public class BrandsService(IBrandsRepository brandsRepository, IMapper mapper, I
         var dto = _mapper.Map<BrandDto>(brand);
         return dto;
     }
+    
+    public async Task<List<BrandDto>> GetByUserIdAsync(CancellationToken cancellationToken)
+    {
+        var brand = await _brandsRepository.GetAllAsync(x=>x.CreatedById == GlobalUser.Id, cancellationToken);
+        var dto = _mapper.Map<List<BrandDto>>(brand);
+        return dto;
+    }
 
     public async Task<BrandDto> CreateAsync(BrandCreateDto dto, CancellationToken cancellationToken)
     {

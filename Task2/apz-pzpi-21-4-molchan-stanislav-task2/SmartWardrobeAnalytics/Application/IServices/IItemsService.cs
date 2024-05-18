@@ -9,6 +9,8 @@ public interface IItemsService
 {
     Task<ItemDto> GetItemByIdAsync(string id, CancellationToken cancellationToken);
 
+    Task<List<ItemDto>> GetItemByCollectionIdAsync(string id,
+        CancellationToken cancellationToken);
     Task<ItemDto> CreateItemAsync(ItemCreateDto dto, CancellationToken cancellationToken);
 
     Task<ItemDto> UpdateItemAsync(ItemUpdateDto dto, CancellationToken cancellationToken);

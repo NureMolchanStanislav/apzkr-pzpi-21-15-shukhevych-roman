@@ -36,10 +36,10 @@ public class BrandBonusesController : ControllerBase
         return Ok(newBrandBonus);
     }
 
-    [HttpPut("{id}")]
-    public async Task<ActionResult<BrandBonusDto>> UpdateAsync(string id, [FromBody] BrandBonusUpdateDto dto, CancellationToken cancellationToken)
+    [HttpPut()]
+    public async Task<ActionResult<BrandBonusDto>> UpdateAsync([FromBody] BrandBonusUpdateDto dto, CancellationToken cancellationToken)
     {
-        var updatedBrandBonus = await _brandBonusService.UpdateAsync(id, dto, cancellationToken);
+        var updatedBrandBonus = await _brandBonusService.UpdateAsync(dto, cancellationToken);
         if (updatedBrandBonus == null)
         {
             return NotFound();
@@ -58,10 +58,17 @@ public class BrandBonusesController : ControllerBase
         return NoContent();
     }
 
-    [HttpGet]
+    [HttpGet("paged")]
     public async Task<ActionResult<PagedList<BrandBonusDto>>> GetWithPaginationAsync([FromQuery] int pageNumber, [FromQuery] int pageSize, CancellationToken cancellationToken)
     {
         var brandBonuses = await _brandBonusService.GetWithPaginationAsync(pageNumber, pageSize, cancellationToken);
         return Ok(brandBonuses);
+    }
+
+    [HttpGet]
+    public async Task<ActionResult<List<BrandBonusDto>>> GetAllByUserAsync(CancellationToken cancellationToken)
+    {
+        var result = await _brandBonusService.GetAllByUserAsync(cancellationToken);
+        return Ok(result);
     }
 }

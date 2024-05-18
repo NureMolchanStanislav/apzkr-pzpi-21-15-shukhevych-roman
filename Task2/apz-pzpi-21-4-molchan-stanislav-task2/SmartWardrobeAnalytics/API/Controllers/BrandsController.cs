@@ -64,4 +64,11 @@ public class BrandsController : ControllerBase
         var brands = await _brandsService.GetWithPaginationAsync(pageNumber, pageSize, cancellationToken);
         return Ok(brands);
     }
+
+    [HttpGet("by-user")]
+    public async Task<ActionResult<List<BrandDto>>> GetByUserIdAsync(CancellationToken cancellationToken)
+    {
+        var brands = await _brandsService.GetByUserIdAsync(cancellationToken);
+        return Ok(brands);
+    }
 }

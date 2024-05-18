@@ -28,6 +28,17 @@ public class ItemsController : ControllerBase
         }
         return Ok(item);
     }
+    
+    [HttpGet("collection/{id}")]
+    public async Task<ActionResult<ItemDto>> GetItemByCollectionIdAsync(string id, CancellationToken cancellationToken)
+    {
+        var item = await _itemsService.GetItemByCollectionIdAsync(id, cancellationToken);
+        if (item == null)
+        {
+            return NotFound();
+        }
+        return Ok(item);
+    }
 
     [HttpPost]
     public async Task<ActionResult<ItemDto>> CreateItemAsync([FromBody] ItemCreateDto dto, CancellationToken cancellationToken)

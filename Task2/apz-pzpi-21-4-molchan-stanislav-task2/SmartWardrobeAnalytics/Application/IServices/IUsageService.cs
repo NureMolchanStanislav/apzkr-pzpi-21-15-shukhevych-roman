@@ -14,4 +14,6 @@ public interface IUsageService
     Task<PagedList<UsageDto>> GetWithPaginationAsync(int pageNumber, int pageSize, CancellationToken cancellationToken);
 
     Task<int> CalculateTotalBrandUsageByUser(string brandId, CancellationToken cancellationToken);
+    
+    Task<int> GetTotalUsageByItem(string itemId, CancellationToken cancellationToken);
 }

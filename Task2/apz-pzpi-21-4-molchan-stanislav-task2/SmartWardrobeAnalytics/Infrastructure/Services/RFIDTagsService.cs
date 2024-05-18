@@ -6,6 +6,7 @@ using Application.Models.Dtos;
 using Application.Models.StatisticsDtos;
 using Application.Models.UpdateDtos;
 using Domain.Entities;
+using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
 
 namespace Infrastructure.Services;
@@ -31,6 +32,26 @@ public class RFIDTagsService : IRFIDTagsService
         _usageHistoryRepository = usageHistoryRepository;
     }
 
+    public async Task<List<RFIDGetDto>> GetAllByUser(CancellationToken cancellationToken)
+    {
+        var tags = await _rfidTagRepository.GetAllAsync(x => x.CreatedById == GlobalUser.Id, cancellationToken);
+        
+        var dtos = tags.Select(tag => new RFIDGetDto()
+        {
+             TagId = tag.TagId,
+             ItemId = tag.ItemId.ToString(),
+             Id = tag.Id.ToString()
+        }).ToList();
+
+        return dtos;
+    }
+
+    public async Task UpdateTag(string tagId, string itemId, CancellationToken cancellationToken)
+    {
+        await _rfidTagRepository.UpdateItemId(tagId, itemId, cancellationToken);
+    }
+
+    
     public async Task<bool> CheckForExistById(string id, CancellationToken cancellationToken)
     {
         var tag = await _rfidTagRepository.GetOneAsync(x=>x.TagId == id, cancellationToken);

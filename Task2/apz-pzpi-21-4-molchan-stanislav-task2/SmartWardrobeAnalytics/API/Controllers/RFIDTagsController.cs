@@ -1,5 +1,6 @@
 using Application.IServices;
 using Application.Models.CreateDtos;
+using Application.Models.Dtos;
 using Application.Models.UpdateDtos;
 using Microsoft.AspNetCore.Mvc;
 
@@ -22,6 +23,12 @@ public class RFIDTagsController : ControllerBase
         return await _rfidTagsService.CheckForExistById(tagId, cancellationToken);
     }
 
+    [HttpGet()]
+    public async Task<ActionResult<List<RFIDGetDto>>> GetAllByUser(CancellationToken cancellationToken)
+    {
+        return await _rfidTagsService.GetAllByUser(cancellationToken);
+    }
+
     [HttpPut("updateStatus/{tagId}")]
     public async Task<IActionResult> UpdateTagAndIncrementUsage(string tagId, CancellationToken cancellationToken)
     {
@@ -35,6 +42,13 @@ public class RFIDTagsController : ControllerBase
         {
             return BadRequest("Failed to update RFID tag status.");
         }
+    }
+    
+    [HttpPut("update/{tagId}/{itemId}")]
+    public async Task<IActionResult> UpdateTag(string tagId, string itemId, CancellationToken cancellationToken)
+    {
+        await _rfidTagsService.UpdateTag(tagId, itemId, cancellationToken);
+        return Ok();
     }
     
     [HttpPost("create")]

@@ -34,4 +34,22 @@ public class UsersRepository(MongoDbContext db) : BaseRepository<User>(db, "User
             options, 
             cancellationToken);
     }
+    
+    public async Task<bool> UnBan(string id, CancellationToken cancellationToken)
+    {
+        var updateDefinition = Builders<User>.Update
+            .Set(u => u.IsDeleted, false);
+
+        var options = new FindOneAndUpdateOptions<User>
+        {
+            ReturnDocument = ReturnDocument.After
+        };
+
+        await this._collection.FindOneAndUpdateAsync(
+            Builders<User>.Filter.Eq(u => u.Id, ObjectId.Parse(id)), 
+            updateDefinition, 
+            options, 
+            cancellationToken);
+        return true;
+    }
 }

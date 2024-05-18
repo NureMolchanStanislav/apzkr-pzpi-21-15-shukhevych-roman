@@ -35,6 +35,17 @@ public abstract class BaseRepository<TEntity> : IBaseRepository<TEntity> where T
         await this._collection.InsertOneAsync(entity, new InsertOneOptions(), cancellationToken);
         return entity;
     }
+    
+    public async Task<List<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken)
+    {
+        return await _collection.Find(Builders<TEntity>.Filter.Where(predicate) &
+                                      Builders<TEntity>.Filter.Where(x => !x.IsDeleted)).ToListAsync(cancellationToken);
+    }
+    
+    public async Task<List<TEntity>> GetAllAsync(CancellationToken cancellationToken)
+    {
+        return await _collection.Find(Builders<TEntity>.Filter.Where(x => !x.IsDeleted)).ToListAsync(cancellationToken);
+    }
 
     public async Task<List<TEntity>> GetPageAsync(int pageNumber, int pageSize, CancellationToken cancellationToken)
     {
@@ -42,6 +53,15 @@ public abstract class BaseRepository<TEntity> : IBaseRepository<TEntity> where T
                                      .Skip((pageNumber - 1) * pageSize)
                                      .Limit(pageSize)
                                      .ToListAsync(cancellationToken);
+    }
+    
+    public async Task<List<TEntity>> GetPageAllAsync(int pageNumber, int pageSize, CancellationToken cancellationToken)
+    {
+        return await _collection
+            .Find(Builders<TEntity>.Filter.Empty)
+            .Skip((pageNumber - 1) * pageSize)
+            .Limit(pageSize)
+            .ToListAsync(cancellationToken);
     }
 
     public async Task<List<TEntity>> GetPageAsync(int pageNumber, int pageSize, Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken)
