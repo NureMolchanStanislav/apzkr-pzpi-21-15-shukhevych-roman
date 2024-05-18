@@ -1,0 +1,84 @@
+{
+  "navbar": {
+    "myBrands": "My Brands",
+    "collections": "Collections",
+    "createCollection": "Create collection",
+    "admin": "Admin",
+    "myProfile": "My Profile",
+    "myOffers": "My Offers",
+    "statistics": "Statistics",
+    "comboStatistics": "Combo Statistics",
+    "topStatistics": "Top Statistics",
+    "seasonalStatistics": "Seasonal Statistics",
+    "bonusSystem": "Bonus System",
+    "logout": "Logout",
+    "login": "Login",
+    "register": "Register",
+    "export": "Table Export"
+},
+
+    "home": {
+      "welcome": "Welcome to the Smart Wardrobe Analytics",
+      "aboutTitle": "About Smart Wardrobe Analytics",
+      "aboutDescription": "Smart Wardrobe Analytics is an innovative application designed to help users manage their wardrobe efficiently and make better fashion choices. With our app, you can keep track of your clothing items, monitor usage statistics, and get insights into your wardrobe's performance.",
+      "featuresTitle": "Features",
+      "feature1": "Track your clothing items and manage your wardrobe.",
+      "feature2": "Monitor usage statistics for each item.",
+      "feature3": "Get insights into seasonal item usage.",
+      "feature4": "View top combinations of clothing items.",
+      "feature5": "Manage brands and collections.",
+      "businessTitle": "For Business Users",
+      "businessDescription": "Business users have access to advanced statistics and features, including brand management and bonus systems. Make informed decisions and optimize your inventory with Smart Wardrobe Analytics.",
+      "securityTitle": "Security and Privacy",
+      "securityDescription": "We take your privacy seriously. Your data is securely stored and only accessible by you. We are committed to protecting your information and ensuring your privacy."
+  },
+  "collectionDashboard": {
+    "authRequired": "Authorization Required",
+    "please": "Please",
+    "login": "log in",
+    "or": "or",
+    "register": "register",
+    "toView": "to view collections"
+},
+"login": {
+  "email": "Email",
+  "password": "Password",
+  "invalidCredentials": "Invalid email or password"
+},
+"register": {
+  "firstName": "First Name",
+  "lastName": "Last Name",
+  "phone": "Phone Number",
+  "email": "Email",
+  "password": "Password",
+  "agreeToDataProcessing": "I agree to the processing of my data",
+  "invalidCredentials": "Invalid email or password",
+  "required": "This field is required"
+},
+"search":{
+  "placeholder": "Search"
+},
+
+"buttons": {
+  "create": "Create",
+  "delete": "Delete",
+  "edit": "Edit",
+  "items": "Items"
+},
+"admin": {
+  "userList": "User List",
+  "search.placeholder": "Search by ID or Email...",
+  "unban": "Unban",
+  "ban": "Ban",
+  "selectRole": "Select Role",
+  "addRole": "Add Role",
+  "removeRole": "Remove Role",
+  "page": "Admin Page",
+  "select": "Select"
+},
+"footer": {
+  "copyright": "© 2024 Smart Wardrobe Analytics. All rights reserved."
+}
+
+}
+  

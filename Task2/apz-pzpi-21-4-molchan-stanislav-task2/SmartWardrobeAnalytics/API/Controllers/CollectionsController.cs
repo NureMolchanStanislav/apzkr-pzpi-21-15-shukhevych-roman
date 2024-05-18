@@ -1,5 +1,6 @@
 using Application.IServices;
 using Application.Models.CreateDtos;
+using Application.Models.Dtos;
 using Application.Models.UpdateDtos;
 using Application.Paging;
 using Domain.Entities;
@@ -26,7 +27,7 @@ public class CollectionsController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<Collection>> GetCollectionByIdAsync(string id, CancellationToken cancellationToken)
+    public async Task<ActionResult<CollectionDto>> GetCollectionByIdAsync(string id, CancellationToken cancellationToken)
     {
         var collection = await _collectionsService.GetCollectionByIdAsync(id, cancellationToken);
         if (collection == null)
@@ -59,9 +60,16 @@ public class CollectionsController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<PagedList<Collection>>> GetCollectionsWithPaginationAsync([FromQuery] int pageNumber, [FromQuery] int pageSize, CancellationToken cancellationToken)
+    public async Task<ActionResult<PagedList<CollectionDto>>> GetCollectionsWithPaginationAsync([FromQuery] int pageNumber, [FromQuery] int pageSize, CancellationToken cancellationToken)
     {
         var collections = await _collectionsService.GetCollectionsWithPaginationAsync(pageNumber, pageSize, cancellationToken);
+        return Ok(collections);
+    }
+
+    [HttpGet("all")]
+    public async Task<ActionResult<List<CollectionDto>>> GetAllAsync(CancellationToken cancellationToken)
+    {
+        var collections = await _collectionsService.GetAllAsync(cancellationToken);
         return Ok(collections);
     }
 }

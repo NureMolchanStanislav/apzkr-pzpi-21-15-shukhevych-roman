@@ -12,4 +12,9 @@ public interface IStatisticsService
 
     Task<List<PopularItemStatisticsDto>> GetTopPopularItemsAsync(string brandId, DateTime startDate, DateTime endDate,
         int topCount, CancellationToken cancellationToken);
+
+    Task<List<MonthlyItemUsageStatisticsDto>> GetMonthlyItemUsageStatisticsAsync(
+        string itemId, int months, CancellationToken cancellationToken);
+
+    Task<List<ItemUsagesHistory>> GetUsageHistoryForItemAsync(string itemId, CancellationToken cancellationToken);
 }

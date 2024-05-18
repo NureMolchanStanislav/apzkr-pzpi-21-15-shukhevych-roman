@@ -23,4 +23,10 @@ public interface IUserService
     Task<UserDto> RemoveFromRoleAsync(string userId, string roleName, CancellationToken cancellationToken);
 
     Task<TokensModel> RefreshAccessTokenAsync(TokensModel tokensModel, CancellationToken cancellationToken);
+
+    Task<UserDto> GetCurrentUserAsync(CancellationToken cancellationToken);
+
+    Task<bool> BanUser(string userId, CancellationToken cancellationToken);
+
+    Task<bool> UnBanUser(string userId, CancellationToken cancellationToken);
 }

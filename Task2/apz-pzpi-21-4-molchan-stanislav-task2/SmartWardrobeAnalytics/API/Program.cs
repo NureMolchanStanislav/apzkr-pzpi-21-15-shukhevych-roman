@@ -18,7 +18,13 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("UserPolicy", policy => policy.RequireRole("User"));
     options.AddPolicy("OwnerPolicy", policy => policy.RequireRole("Owner"));
 });
-
+builder.Services.AddCors(opt =>
+{
+    opt.AddPolicy("CorsPolicy", policy =>
+    {
+        policy.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin();
+    });
+});
 
 var app = builder.Build();
 
@@ -30,6 +36,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors("CorsPolicy");
 
 app.UseAuthentication();
 app.UseAuthorization();

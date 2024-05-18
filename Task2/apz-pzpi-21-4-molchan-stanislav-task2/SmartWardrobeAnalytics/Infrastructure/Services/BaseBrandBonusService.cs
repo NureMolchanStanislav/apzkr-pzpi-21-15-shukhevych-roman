@@ -1,3 +1,4 @@
+using Application.GlobalInstance;
 using Application.IRepositories;
 using Application.IServices;
 using Application.Models.CreateDtos;
@@ -26,20 +27,27 @@ public class BaseBrandBonusService : IBrandBonusService
         var brandBonus = await _brandBonusRepository.GetOneAsync(ObjectId.Parse(id), cancellationToken);
         return _mapper.Map<BrandBonusDto>(brandBonus);
     }
+    
+    public async Task<List<BrandBonusDto>> GetAllByUserAsync(CancellationToken cancellationToken)
+    {
+        var brandBonus = await _brandBonusRepository.GetAllAsync(x=>x.CreatedById == GlobalUser.Id, cancellationToken);
+        return _mapper.Map<List<BrandBonusDto>>(brandBonus);
+    }
 
     public async Task<BrandBonusDto> CreateAsync(BrandBonusCreateDto dto, CancellationToken cancellationToken)
     {
         var brandBonus = _mapper.Map<BrandBonus>(dto);
         brandBonus.CreatedDateUtc = DateTime.UtcNow;
+        brandBonus.CreatedById = GlobalUser.Id;
 
         await _brandBonusRepository.AddAsync(brandBonus, cancellationToken);
 
         return _mapper.Map<BrandBonusDto>(brandBonus);
     }
 
-    public async Task<BrandBonusDto> UpdateAsync(string id, BrandBonusUpdateDto dto, CancellationToken cancellationToken)
+    public async Task<BrandBonusDto> UpdateAsync(BrandBonusUpdateDto dto, CancellationToken cancellationToken)
     {
-        var existingBrandBonus = await _brandBonusRepository.GetOneAsync(ObjectId.Parse(id), cancellationToken);
+        var existingBrandBonus = await _brandBonusRepository.GetOneAsync(ObjectId.Parse(dto.Id), cancellationToken);
         if (existingBrandBonus == null)
         {
             return null;

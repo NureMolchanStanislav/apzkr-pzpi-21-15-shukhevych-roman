@@ -59,60 +59,62 @@ public class StatisticsService : IStatisticsService
         return seasonalStatisticsList;
     }
     
-    public async Task<List<CombinationStatisticsDto>> GetItemCombinationsStatisticsAsync(CancellationToken cancellationToken)
+public async Task<List<CombinationStatisticsDto>> GetItemCombinationsStatisticsAsync(CancellationToken cancellationToken)
+{
+    var usageHistory = await _usageHistoryRepository.GetAllAsync(cancellationToken);
+    var items = await _itemsRepository.GetAllAsync(cancellationToken);
+    
+    var groupedByUser = usageHistory
+        .Join(items,
+            usage => usage.ItemId,
+            item => item.Id,
+            (usage, item) => new { Usage = usage, UserId = item.CreatedById })
+        .GroupBy(u => u.UserId);
+
+    var combinationsStatistics = new List<CombinationStatisticsDto>();
+
+    foreach (var userGroup in groupedByUser)
     {
-        var usageHistory = await _usageHistoryRepository.GetAllAsync(cancellationToken);
-        var items = await _itemsRepository.GetAllAsync(cancellationToken);
+        var userId = userGroup.Key;
+        var userUsageHistory = userGroup.OrderBy(u => u.Usage.CreatedDateUtc).ToList();
         
-        var groupedByUser = usageHistory
-            .Join(items,
-                usage => usage.ItemId,
-                item => item.Id,
-                (usage, item) => new { Usage = usage, UserId = item.CreatedById })
-            .GroupBy(u => u.UserId);
-    
-        var combinationsStatistics = new List<CombinationStatisticsDto>();
-    
-        foreach (var userGroup in groupedByUser)
+        for (int i = 0; i < userUsageHistory.Count; i++)
         {
-            var userId = userGroup.Key;
-            var userUsageHistory = userGroup.OrderBy(u => u.Usage.CreatedDateUtc).ToList();
+            var currentUsage = userUsageHistory[i];
+            var currentItemName = await _itemsRepository.GetOneAsync(currentUsage.Usage.ItemId, cancellationToken);
+            var combination = new List<string> { currentItemName.Name };
+            var combinationDate = currentUsage.Usage.CreatedDateUtc;  // Запам'ятовуємо дату першого елемента комбінації
             
-            for (int i = 0; i < userUsageHistory.Count; i++)
+            for (int j = i + 1; j < userUsageHistory.Count; j++)
             {
-                var currentUsage = userUsageHistory[i];
-                var currentItemName = await _itemsRepository.GetOneAsync(currentUsage.Usage.ItemId, cancellationToken);
-                var combination = new List<string> { currentItemName.Name };
+                var nextUsage = userUsageHistory[j];
                 
-                for (int j = i + 1; j < userUsageHistory.Count; j++)
+                if ((nextUsage.Usage.CreatedDateUtc - currentUsage.Usage.CreatedDateUtc).TotalMinutes <= 5)
                 {
-                    var nextUsage = userUsageHistory[j];
-                    
-                    if ((nextUsage.Usage.CreatedDateUtc - currentUsage.Usage.CreatedDateUtc).TotalMinutes <= 5)
-                    {
-                        var itemName = await _itemsRepository.GetOneAsync(nextUsage.Usage.ItemId, cancellationToken);
-                        combination.Add(itemName.Name);
-                    }
-                    else
-                    {
-                        break;
-                    }
+                    var itemName = await _itemsRepository.GetOneAsync(nextUsage.Usage.ItemId, cancellationToken);
+                    combination.Add(itemName.Name);
                 }
-                
-                if (combination.Count > 1)
+                else
                 {
-                    combinationsStatistics.Add(new CombinationStatisticsDto
-                    {
-                        UserId = userGroup.Key.ToString(),
-                        Combination = combination,
-                        UsageCount = combination.Count
-                    });
+                    break;
                 }
             }
+            
+            if (combination.Count > 1)
+            {
+                combinationsStatistics.Add(new CombinationStatisticsDto
+                {
+                    UserId = userGroup.Key.ToString(),
+                    Combination = combination,
+                    UsageCount = combination.Count,
+                    Date = combinationDate.ToString()
+                });
+            }
         }
-    
-        return combinationsStatistics;
     }
+
+    return combinationsStatistics;
+}
     
     public async Task<List<PopularItemStatisticsDto>> GetTopPopularItemsAsync(string brandId, DateTime startDate, DateTime endDate, int topCount, CancellationToken cancellationToken)
     {
@@ -139,11 +141,54 @@ public class StatisticsService : IStatisticsService
 
         return popularItems;
     }
+    
+    public async Task<List<MonthlyItemUsageStatisticsDto>> GetMonthlyItemUsageStatisticsAsync(
+        string itemId, int months, CancellationToken cancellationToken)
+    {
+        var endDate = DateTime.UtcNow;
+        var startDate = endDate.AddMonths(-months);
 
+        var usageHistory = await _usageHistoryRepository.GetPageAsync(
+            1, 1000, x => x.ItemId == ObjectId.Parse(itemId) && x.CreatedDateUtc >= startDate && x.CreatedDateUtc <= endDate, cancellationToken);
+
+        var monthlyUsages = new Dictionary<string, int>();
+        
+        foreach (var usage in usageHistory)
+        {
+            var monthKey = usage.CreatedDateUtc.ToString("yyyy-MM");
+            if (!monthlyUsages.ContainsKey(monthKey))
+            {
+                monthlyUsages[monthKey] = 0;
+            }
+            monthlyUsages[monthKey]++;
+        }
+        
+        var monthlyStatisticsList = monthlyUsages.Select(kvp => new MonthlyItemUsageStatisticsDto
+        {
+            Month = kvp.Key,
+            UsageCount = kvp.Value
+        }).ToList();
+
+        return monthlyStatisticsList;
+    }
+    
     private async Task<string> GetItemNameByIdAsync(ObjectId itemId, CancellationToken cancellationToken)
     {
         var item = await _itemsRepository.GetOneAsync(x => x.Id == itemId, cancellationToken);
         return item?.Name;
+    }
+
+    public async Task<List<ItemUsagesHistory>> GetUsageHistoryForItemAsync(string itemId, CancellationToken cancellationToken)
+    {
+        var item = await _itemsRepository.GetOneAsync(x => x.Id == ObjectId.Parse(itemId), cancellationToken);
+        var usages = await _usageHistoryRepository.GetAllAsync(x => x.ItemId == ObjectId.Parse(itemId), cancellationToken);
+        var dtos = usages.Select(usage => new ItemUsagesHistory()
+        {
+            Name = item.Name,
+            Date = usage.CreatedDateUtc.ToString()
+        }).ToList();
+        
+        return dtos;
     }
 
     private string GetSeason(DateTime date)

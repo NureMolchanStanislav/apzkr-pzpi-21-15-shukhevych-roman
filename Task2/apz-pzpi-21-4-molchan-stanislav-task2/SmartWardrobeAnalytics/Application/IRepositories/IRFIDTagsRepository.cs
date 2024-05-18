@@ -9,4 +9,6 @@ public interface IRFIDTagsRepository : IBaseRepository<RFIDTag>
     Task<bool> UpdateStatus(string tagId, CancellationToken cancellationToken);
 
     Task<bool> GetStatus(string sensorId, CancellationToken cancellationToken);
+
+    Task<bool> UpdateItemId(string tagId, string itemId, CancellationToken cancellationToken);
 }

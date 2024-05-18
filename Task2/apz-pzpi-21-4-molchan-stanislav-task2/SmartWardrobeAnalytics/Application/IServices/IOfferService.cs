@@ -16,4 +16,6 @@ public interface IOfferService
     Task<bool> DeleteAsync(string id, CancellationToken cancellationToken);
 
     Task<PagedList<OfferDto>> GetWithPaginationAsync(int pageNumber, int pageSize, CancellationToken cancellationToken);
+
+    Task<List<OfferInfo>> GetForUser(CancellationToken cancellationToken);
 }

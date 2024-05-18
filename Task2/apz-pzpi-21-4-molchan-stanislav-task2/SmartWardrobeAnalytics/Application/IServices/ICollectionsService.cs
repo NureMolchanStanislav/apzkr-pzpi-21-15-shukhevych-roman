@@ -15,4 +15,6 @@ public interface ICollectionsService
 
     Task<PagedList<CollectionDto>> GetCollectionsWithPaginationAsync(int pageNumber, int pageSize,
         CancellationToken cancellationToken);
+
+    Task<List<CollectionDto>> GetAllAsync(CancellationToken cancellationToken);
 }
