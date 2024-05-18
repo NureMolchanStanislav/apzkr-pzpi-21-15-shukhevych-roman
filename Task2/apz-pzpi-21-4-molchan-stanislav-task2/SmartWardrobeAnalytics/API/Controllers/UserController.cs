@@ -62,6 +62,18 @@ public class UserController : BaseController
 
         return user;
     }
+    
+    [HttpDelete("ban/{id}")]
+    public async Task<bool> BanUser(string id, CancellationToken cancellationToken)
+    {
+        return await _userService.BanUser(id, cancellationToken);
+    }
+    
+    [HttpPost("unban/{id}")]
+    public async Task<bool> UnBanUser(string id, CancellationToken cancellationToken)
+    {
+        return await _userService.UnBanUser(id, cancellationToken);
+    }
 
     [HttpPost("{userId}/roles/{roleName}")]
     public async Task<ActionResult<PagedList<UserDto>>> AddToRoleAsync(string userId, string roleName, CancellationToken cancellationToken)

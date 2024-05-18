@@ -11,4 +11,8 @@ public interface IRFIDTagsService
     Task<RFIDTagDto> CreateRFIDTagAsync(RFIDTagCreateDto createDto, CancellationToken cancellationToken);
 
     Task<bool> CheckForExistById(string id, CancellationToken cancellationToken);
+
+    Task<List<RFIDGetDto>> GetAllByUser(CancellationToken cancellationToken);
+
+    Task UpdateTag(string tagId, string itemId, CancellationToken cancellationToken);
 }

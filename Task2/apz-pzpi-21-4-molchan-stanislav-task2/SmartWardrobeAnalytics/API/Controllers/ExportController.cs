@@ -10,7 +10,7 @@ using Persistence.Database;
 
 namespace API.Controllers;
 
-[Route("export")]
+[Route("api/export")]
 public class ExportController : BaseController
 {
     private readonly MongoDbContext _context;

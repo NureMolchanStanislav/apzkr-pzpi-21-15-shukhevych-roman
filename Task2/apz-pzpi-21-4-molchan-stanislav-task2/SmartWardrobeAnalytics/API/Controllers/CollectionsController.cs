@@ -65,4 +65,11 @@ public class CollectionsController : ControllerBase
         var collections = await _collectionsService.GetCollectionsWithPaginationAsync(pageNumber, pageSize, cancellationToken);
         return Ok(collections);
     }
+
+    [HttpGet("all")]
+    public async Task<ActionResult<List<CollectionDto>>> GetAllAsync(CancellationToken cancellationToken)
+    {
+        var collections = await _collectionsService.GetAllAsync(cancellationToken);
+        return Ok(collections);
+    }
 }

@@ -29,6 +29,14 @@ public class ItemsService : IItemsService
         dto.Categories = item.Category;
         return dto;
     }
+    
+    public async Task<List<ItemDto>> GetItemByCollectionIdAsync(string id, CancellationToken cancellationToken)
+    {
+        var item = await _itemsRepository.GetAllAsync(x => x.CollectionId == ObjectId.Parse(id),
+            cancellationToken);
+        var dtos = _mapper.Map<List<ItemDto>>(item);
+        return dtos;
+    }
 
     public async Task<ItemDto> CreateItemAsync(ItemCreateDto dto, CancellationToken cancellationToken)
     {

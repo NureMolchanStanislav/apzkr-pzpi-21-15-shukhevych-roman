@@ -17,4 +17,6 @@ public interface IBrandsService
 
     Task<PagedList<BrandDto>> GetWithPaginationAsync(int pageNumber, int pageSize,
         CancellationToken cancellationToken);
+
+    Task<List<BrandDto>> GetByUserIdAsync(CancellationToken cancellationToken);
 }

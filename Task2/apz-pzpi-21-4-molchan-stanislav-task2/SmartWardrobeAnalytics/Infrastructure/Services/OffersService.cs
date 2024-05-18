@@ -1,3 +1,4 @@
+using Application.GlobalInstance;
 using Application.IRepositories;
 using Application.IServices;
 using Application.Models.CreateDtos;
@@ -13,18 +14,35 @@ namespace Infrastructure.Services;
 public class OffersService : IOfferService
 {
     private readonly IOffersRepository _offerRepository;
+    private readonly IBrandsRepository _brandRepository;
     private readonly IMapper _mapper;
 
-    public OffersService(IOffersRepository offerRepository, IMapper mapper)
+    public OffersService(IOffersRepository offerRepository, IMapper mapper, IBrandsRepository brandsRepository)
     {
         _offerRepository = offerRepository;
         _mapper = mapper;
+        _brandRepository = brandsRepository;
     }
 
     public async Task<OfferDto> GetByIdAsync(string id, CancellationToken cancellationToken)
     {
         var offer = await _offerRepository.GetOneAsync(ObjectId.Parse(id), cancellationToken);
         return _mapper.Map<OfferDto>(offer);
+    }
+    
+    public async Task<List<OfferInfo>> GetForUser(CancellationToken cancellationToken)
+    {
+        var offers = await _offerRepository.GetAllAsync(x => x.UserId == GlobalUser.Id, cancellationToken);
+        var brandIds = offers.Select(o => o.BrandId).Distinct().ToList();
+        var brands = await _brandRepository.GetAllAsync(b => brandIds.Contains(b.Id), cancellationToken);
+
+        var dtos = offers.Select(offer => new OfferInfo()
+        {
+            Discount = offer.Discount,
+            BrandName = brands.FirstOrDefault(b => b.Id == offer.BrandId)?.Name
+        }).ToList();
+    
+        return dtos;
     }
 
     public async Task<OfferDto> CreateAsync(OfferCreateDto dto, CancellationToken cancellationToken)

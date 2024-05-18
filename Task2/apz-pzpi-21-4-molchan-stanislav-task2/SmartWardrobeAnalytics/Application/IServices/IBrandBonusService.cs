@@ -11,10 +11,12 @@ public interface IBrandBonusService
 
     Task<BrandBonusDto> CreateAsync(BrandBonusCreateDto dto, CancellationToken cancellationToken);
 
-    Task<BrandBonusDto> UpdateAsync(string id, BrandBonusUpdateDto dto, CancellationToken cancellationToken);
+    Task<BrandBonusDto> UpdateAsync(BrandBonusUpdateDto dto, CancellationToken cancellationToken);
 
     Task<bool> DeleteAsync(string id, CancellationToken cancellationToken);
 
     Task<PagedList<BrandBonusDto>> GetWithPaginationAsync(int pageNumber, int pageSize,
         CancellationToken cancellationToken);
+
+    Task<List<BrandBonusDto>> GetAllByUserAsync(CancellationToken cancellationToken);
 }

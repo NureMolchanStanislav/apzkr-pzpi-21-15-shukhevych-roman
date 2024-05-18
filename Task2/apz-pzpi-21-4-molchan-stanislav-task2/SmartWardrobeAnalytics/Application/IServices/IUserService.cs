@@ -25,4 +25,8 @@ public interface IUserService
     Task<TokensModel> RefreshAccessTokenAsync(TokensModel tokensModel, CancellationToken cancellationToken);
 
     Task<UserDto> GetCurrentUserAsync(CancellationToken cancellationToken);
+
+    Task<bool> BanUser(string userId, CancellationToken cancellationToken);
+
+    Task<bool> UnBanUser(string userId, CancellationToken cancellationToken);
 }

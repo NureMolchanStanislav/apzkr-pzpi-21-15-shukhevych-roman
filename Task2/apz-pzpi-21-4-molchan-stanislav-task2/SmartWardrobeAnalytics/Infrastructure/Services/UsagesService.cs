@@ -78,6 +78,13 @@ public class UsagesService : IUsageService
         return new PagedList<UsageDto>(dtos, pageNumber, pageSize, totalCount);
     }
     
+    public async Task<int> GetTotalUsageByItem(string itemId, CancellationToken cancellationToken)
+    {
+        var totalUsages = await _usageRepository.GetOneAsync(x=>x.ItemId==ObjectId.Parse(itemId), cancellationToken);
+
+        return totalUsages.TotalCount;
+    }
+    
     public async Task<int> CalculateTotalBrandUsageByUser(string brandId, CancellationToken cancellationToken)
     {
         List<Item> items = await _itemsRepository.GetItemsByBrandAndCreatorId(ObjectId.Parse(brandId), GlobalUser.Id, cancellationToken);

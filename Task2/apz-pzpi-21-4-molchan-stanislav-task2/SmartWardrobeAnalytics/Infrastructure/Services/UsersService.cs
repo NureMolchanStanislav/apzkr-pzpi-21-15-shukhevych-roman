@@ -54,7 +54,7 @@ public class UsersService : IUserService
 
     public async Task<PagedList<UserDto>> GetUsersPageAsync(int pageNumber, int pageSize, CancellationToken cancellationToken)
     {
-        var entities = await _usersRepository.GetPageAsync(pageNumber, pageSize, cancellationToken);
+        var entities = await _usersRepository.GetPageAllAsync(pageNumber, pageSize, cancellationToken);
         var dtos = _mapper.Map<List<UserDto>>(entities);
         var count = await _usersRepository.GetTotalCountAsync();
         return new PagedList<UserDto>(dtos, pageNumber, pageSize, count);
@@ -74,6 +74,18 @@ public class UsersService : IUserService
         }
 
         return _mapper.Map<UserDto>(entity);
+    }
+    
+    public async Task<bool> BanUser(string userId, CancellationToken cancellationToken)
+    {
+        var user = await _usersRepository.GetOneAsync(x => x.Id == ObjectId.Parse(userId), cancellationToken);
+        await _usersRepository.DeleteAsync(user, cancellationToken);
+        return true;
+    }
+    
+    public async Task<bool> UnBanUser(string userId, CancellationToken cancellationToken)
+    {
+        return await _usersRepository.UnBan(userId, cancellationToken);
     }
 
     public async Task<TokensModel> AddUserAsync(UserCreateDto dto, CancellationToken cancellationToken)

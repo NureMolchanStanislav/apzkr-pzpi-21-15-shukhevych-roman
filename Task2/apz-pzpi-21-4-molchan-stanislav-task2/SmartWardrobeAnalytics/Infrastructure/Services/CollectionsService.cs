@@ -26,6 +26,14 @@ public class CollectionsService : ICollectionsService
     {
         return await _collectionsRepository.GetOneAsync(ObjectId.Parse(id), cancellationToken);
     }
+    
+    public async Task<List<CollectionDto>> GetAllAsync(CancellationToken cancellationToken)
+    {
+        var collections =
+            await _collectionsRepository.GetAllAsync(cancellationToken);
+        var dtos = _mapper.Map<List<CollectionDto>>(collections);
+        return dtos;
+    }
 
     public async Task<Collection> CreateCollectionAsync(CollectionCreateDto dto, CancellationToken cancellationToken)
     {
@@ -65,7 +73,7 @@ public class CollectionsService : ICollectionsService
 
     public async Task<PagedList<CollectionDto>> GetCollectionsWithPaginationAsync(int pageNumber, int pageSize, CancellationToken cancellationToken)
     {
-        var collections = await _collectionsRepository.GetPageAsync(pageNumber, pageSize, cancellationToken);
+        var collections = await _collectionsRepository.GetPageAsync(pageNumber, pageSize, x=>x.CreatedById == GlobalUser.Id, cancellationToken);
         var dtos = _mapper.Map<List<CollectionDto>>(collections);
         var totalCount = await _collectionsRepository.GetTotalCountAsync();
 

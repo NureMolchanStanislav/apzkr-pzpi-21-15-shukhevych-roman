@@ -36,4 +36,15 @@ public class RFIDTagsRepository(MongoDbContext db) : BaseRepository<RFIDTag>(db,
         
         return !currentStatus;
     }
+    
+    public async Task<bool> UpdateItemId(string tagId, string itemId, CancellationToken cancellationToken)
+    {
+        var filter = MongoDB.Driver.Builders<RFIDTag>.Filter.Eq(x => x.Id, ObjectId.Parse(tagId));
+        var update = MongoDB.Driver.Builders<RFIDTag>.Update
+            .Set(x => x.ItemId, ObjectId.Parse(itemId));
+
+        var result = await _collection.UpdateOneAsync(filter, update);
+
+        return true;
+    }
 }
