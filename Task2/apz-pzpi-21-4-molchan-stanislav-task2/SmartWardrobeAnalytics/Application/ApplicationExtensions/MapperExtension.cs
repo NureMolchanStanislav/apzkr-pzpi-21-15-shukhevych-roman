@@ -17,6 +17,7 @@ public static class MapperExtension
         services.AddAutoMapper(Assembly.GetAssembly(typeof(ItemProfile)));
         services.AddAutoMapper(Assembly.GetAssembly(typeof(OfferProfile)));
         services.AddAutoMapper(Assembly.GetAssembly(typeof(Usages)));
+        services.AddAutoMapper(Assembly.GetAssembly(typeof(NotificationProfile)));
 
         return services;
     }

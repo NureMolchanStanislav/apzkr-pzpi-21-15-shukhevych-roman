@@ -6,6 +6,7 @@ using Application.Models.Dtos;
 using Application.Models.StatisticsDtos;
 using Application.Models.UpdateDtos;
 using Domain.Entities;
+using Infrastructure.Services.OneSignal;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
 
@@ -20,8 +21,10 @@ public class RFIDTagsService : IRFIDTagsService
     private readonly IBrandBonusesRepository _brandBonusesRepository;
     private readonly IOffersRepository _offersRepository;
     private readonly IUsageHistoryRepository _usageHistoryRepository;
+    private readonly INotificationsRepository _notificationsRepository;
+    private readonly OneSignalService _oneSignalService;
 
-    public RFIDTagsService(IRFIDTagsRepository rfidTagRepository, IUsagesRepository usageRepository, IUsageService usageService, IItemsRepository itemsRepository, IBrandBonusesRepository brandBonusesRepository, IOffersRepository offersRepository, IUsageHistoryRepository usageHistoryRepository)
+    public RFIDTagsService(IRFIDTagsRepository rfidTagRepository, IUsagesRepository usageRepository, IUsageService usageService, IItemsRepository itemsRepository, IBrandBonusesRepository brandBonusesRepository, IOffersRepository offersRepository, IUsageHistoryRepository usageHistoryRepository, INotificationsRepository notificationsRepository, OneSignalService oneSignalService)
     {
         _rfidTagRepository = rfidTagRepository;
         _usageRepository = usageRepository;
@@ -30,6 +33,8 @@ public class RFIDTagsService : IRFIDTagsService
         _brandBonusesRepository = brandBonusesRepository;
         _offersRepository = offersRepository;
         _usageHistoryRepository = usageHistoryRepository;
+        _notificationsRepository = notificationsRepository;
+        _oneSignalService = oneSignalService;
     }
 
     public async Task<List<RFIDGetDto>> GetAllByUser(CancellationToken cancellationToken)
@@ -69,6 +74,7 @@ public class RFIDTagsService : IRFIDTagsService
         var updateSuccessful = await _rfidTagRepository.UpdateStatus(tagId, cancellationToken);
         var tag = await _rfidTagRepository.GetOneAsync(x=>x.TagId== tagId, cancellationToken);
         var item = await _itemsRepository.GetOneAsync(x => x.Id == tag.ItemId, cancellationToken);
+        var notifications = await _notificationsRepository.GetAllAsync(x => x.ItemId == item.Id, cancellationToken);
         
         if (updateSuccessful)
         {
@@ -84,11 +90,22 @@ public class RFIDTagsService : IRFIDTagsService
             if (usages!=null)
             {
                 await _usageRepository.IncrementTotalCountAsync(tag.ItemId.ToString(), cancellationToken);
+                
+                foreach (var notification in notifications)
+                {
+                    int conditionValue = notification.Condition;
+                    
+                    if (notification.Condition % conditionValue == 0 && usages.TotalCount % conditionValue == 0)
+                    {
+                        await _oneSignalService.SendNotificationAsync( notification.Description, notification.Title);
+                    }
+                }
             }
             if (usages==null)
             {
                 await _usageRepository.AddAsync(new Usages(){ItemId = item.Id, TotalCount = 1}, cancellationToken);
             }
+            
             var totalCount = await _usageService.CalculateTotalBrandUsageByUser(item.BrandId.ToString(), cancellationToken);
             
             var brandBonus = await _brandBonusesRepository.GetOneAsync(x => x.BrandId == item.BrandId, cancellationToken);
