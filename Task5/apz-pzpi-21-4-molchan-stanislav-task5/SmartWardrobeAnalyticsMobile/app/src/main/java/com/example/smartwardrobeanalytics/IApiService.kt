@@ -8,6 +8,7 @@ import com.example.smartwardrobeanalytics.dtos.StatisticDto
 import com.example.smartwardrobeanalytics.dtos.TokensModel;
 import com.example.smartwardrobeanalytics.dtos.UsageDto
 import com.example.smartwardrobeanalytics.dtos.User
+import com.example.smartwardrobeanalytics.dtos.сreateDto.CollectionCreateDto
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -34,4 +35,7 @@ interface IApiService {
 
     @GET("Statistics/item-usages/{itemId}")
     fun getItemUsages(@Path("itemId") itemId: String): Call<List<UsageDto>>
+
+    @POST("collections")
+    fun createCollection(@Body collectionCreateDto: CollectionCreateDto): Call<Void>
 }

@@ -38,6 +38,14 @@
                 android:layout_height="match_parent" />
         </FrameLayout>
 
+        <!-- Додаємо кнопку "New" у content_main -->
+        <Button
+            android:id="@+id/button_new_collection"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="New"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="16dp" />
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
     <com.google.android.material.navigation.NavigationView

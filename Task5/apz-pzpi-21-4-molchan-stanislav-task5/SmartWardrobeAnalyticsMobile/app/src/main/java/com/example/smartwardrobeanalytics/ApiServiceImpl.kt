@@ -13,6 +13,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 import com.example.smartwardrobeanalytics.dtos.*
+import com.example.smartwardrobeanalytics.dtos.сreateDto.CollectionCreateDto
 
 
 class ApiServiceImpl {
@@ -152,6 +153,24 @@ class ApiServiceImpl {
 
             override fun onFailure(call: Call<List<UsageDto>>, t: Throwable) {
                 callback.onError("Get item usages request failed: ${t.message}")
+            }
+        })
+    }
+
+    fun createCollection(collectionCreateDto: CollectionCreateDto, callback: ApiCallback<Unit>) {
+        val call = apiService.createCollection(collectionCreateDto)
+
+        call.enqueue(object : Callback<Void> {
+            override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                if (response.isSuccessful) {
+                    callback.onSuccess(Unit)
+                } else {
+                    callback.onError("Create collection failed with error code ${response.code()}")
+                }
+            }
+
+            override fun onFailure(call: Call<Void>, t: Throwable) {
+                callback.onError("Create collection request failed: ${t.message}")
             }
         })
     }

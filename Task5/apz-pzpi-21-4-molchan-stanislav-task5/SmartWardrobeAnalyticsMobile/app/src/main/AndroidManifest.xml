@@ -20,7 +20,7 @@
         </activity>
         <activity android:name=".activities.CollectionItemsActivity" />
         <activity android:name=".activities.ItemDetailsActivity" />
-        <activity android:name=".activities.BaseActivity" />
+        <activity android:name=".activities.CreateCollectionActivity" />
         <activity android:name=".RegisterActivity" />
         <activity android:name=".LoginActivity" android:exported="true">
             <intent-filter>
