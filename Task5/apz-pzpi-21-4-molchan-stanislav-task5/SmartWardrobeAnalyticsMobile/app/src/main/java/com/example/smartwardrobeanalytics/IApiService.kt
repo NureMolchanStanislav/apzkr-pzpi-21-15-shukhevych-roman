@@ -4,6 +4,7 @@ import com.example.smartwardrobeanalytics.dtos.CollectionDto
 import com.example.smartwardrobeanalytics.dtos.CollectionResponse
 import com.example.smartwardrobeanalytics.dtos.ItemDto
 import com.example.smartwardrobeanalytics.dtos.LoginUserDto;
+import com.example.smartwardrobeanalytics.dtos.NotificationDto
 import com.example.smartwardrobeanalytics.dtos.StatisticDto
 import com.example.smartwardrobeanalytics.dtos.TokensModel;
 import com.example.smartwardrobeanalytics.dtos.UsageDto
@@ -38,4 +39,7 @@ interface IApiService {
 
     @POST("collections")
     fun createCollection(@Body collectionCreateDto: CollectionCreateDto): Call<Void>
+
+    @GET("notifications/get/{id}")
+    fun getNotifications(@Path("id") itemId: String): Call<List<NotificationDto>>
 }

@@ -1,15 +1,19 @@
 package com.example.smartwardrobeanalytics.activities
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.smartwardrobeanalytics.ApiServiceImpl
+import com.example.smartwardrobeanalytics.R
 import com.example.smartwardrobeanalytics.adapters.ItemUsageAdapter
 import com.example.smartwardrobeanalytics.databinding.ActivityItemDetailsBinding
 import com.example.smartwardrobeanalytics.dtos.StatisticDto
 import com.example.smartwardrobeanalytics.dtos.UsageDto
+import com.example.smartwardrobeanalytics.interfaces.iretrofit.ApiCallback
 
 class ItemDetailsActivity : AppCompatActivity() {
 
@@ -39,10 +43,18 @@ class ItemDetailsActivity : AppCompatActivity() {
             is24HourFormat = isChecked
             usageAdapter.set24HourFormat(is24HourFormat)
         }
+
+        // Додавання кнопки дзвіночка
+        val bellIcon: ImageView = findViewById(R.id.bell_icon)
+        bellIcon.setOnClickListener {
+            val intent = Intent(this, NotificationsActivity::class.java)
+            intent.putExtra("item_id", itemId)
+            startActivity(intent)
+        }
     }
 
     private fun fetchItemStatistics(itemId: String) {
-        apiService.getItemStatistics(itemId, 12, object : ApiServiceImpl.ApiCallback<List<StatisticDto>> {
+        apiService.getItemStatistics(itemId, 12, object : ApiCallback<List<StatisticDto>> {
             override fun onSuccess(result: List<StatisticDto>) {
                 runOnUiThread {
                     displayItemStatistics(result)
@@ -66,7 +78,7 @@ class ItemDetailsActivity : AppCompatActivity() {
     }
 
     private fun fetchItemUsages(itemId: String) {
-        apiService.getItemUsages(itemId, object : ApiServiceImpl.ApiCallback<List<UsageDto>> {
+        apiService.getItemUsages(itemId, object : ApiCallback<List<UsageDto>> {
             override fun onSuccess(result: List<UsageDto>) {
                 runOnUiThread {
                     displayItemUsages(result)

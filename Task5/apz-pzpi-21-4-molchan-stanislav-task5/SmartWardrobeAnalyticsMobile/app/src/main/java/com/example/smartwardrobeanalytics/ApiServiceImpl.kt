@@ -1,10 +1,9 @@
 package com.example.smartwardrobeanalytics
 
-import com.example.smartwardrobeanalytics.dtos.CollectionDto
-import com.example.smartwardrobeanalytics.dtos.CollectionResponse
-import com.example.smartwardrobeanalytics.dtos.LoginUserDto
-import com.example.smartwardrobeanalytics.dtos.TokensModel
-import com.example.smartwardrobeanalytics.dtos.User
+import com.example.smartwardrobeanalytics.dtos.*
+import com.example.smartwardrobeanalytics.dtos.сreateDto.CollectionCreateDto
+import com.example.smartwardrobeanalytics.interfaces.iretrofit.ApiCallback
+import com.example.smartwardrobeanalytics.services.NotificationServiceImpl
 import okhttp3.OkHttpClient
 import retrofit2.Call
 import retrofit2.Callback
@@ -12,16 +11,10 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
-import com.example.smartwardrobeanalytics.dtos.*
-import com.example.smartwardrobeanalytics.dtos.сreateDto.CollectionCreateDto
-
 
 class ApiServiceImpl {
 
-    interface ApiCallback<T> {
-        fun onSuccess(result: T)
-        fun onError(error: String)
-    }
+    private val notificationService = NotificationServiceImpl()
 
     private val okHttpClient = OkHttpClient.Builder()
         .connectTimeout(15, TimeUnit.SECONDS)
@@ -36,6 +29,10 @@ class ApiServiceImpl {
         .build()
 
     private val apiService = retrofit.create(IApiService::class.java)
+
+    fun getNotifications(itemId: String, callback: ApiCallback<List<NotificationDto>>) {
+        notificationService.getNotifications(itemId, callback)
+    }
 
     fun loginUser(email: String, password: String, callback: ApiCallback<TokensModel>) {
         val loginRequest = LoginUserDto(email, password)
@@ -117,6 +114,7 @@ class ApiServiceImpl {
             }
         })
     }
+
     fun getItemStatistics(itemId: String, months: Int, callback: ApiCallback<List<StatisticDto>>) {
         val call = apiService.getItemStatistics(itemId, months)
 

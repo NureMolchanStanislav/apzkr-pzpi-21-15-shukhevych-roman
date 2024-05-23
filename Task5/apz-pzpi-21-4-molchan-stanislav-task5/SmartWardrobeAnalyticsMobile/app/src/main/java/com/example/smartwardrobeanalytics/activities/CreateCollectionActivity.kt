@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.smartwardrobeanalytics.ApiServiceImpl
 import com.example.smartwardrobeanalytics.R
 import com.example.smartwardrobeanalytics.dtos.сreateDto.CollectionCreateDto
+import com.example.smartwardrobeanalytics.interfaces.iretrofit.ApiCallback
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -41,7 +42,7 @@ class CreateCollectionActivity : AppCompatActivity() {
 
     private fun createCollection(name: String, description: String) {
         val collectionCreateDto = CollectionCreateDto(name, description)
-        apiService.createCollection(collectionCreateDto, object : ApiServiceImpl.ApiCallback<Unit> {
+        apiService.createCollection(collectionCreateDto, object : ApiCallback<Unit> {
             override fun onSuccess(result: Unit) {
                 Toast.makeText(this@CreateCollectionActivity, "Collection created successfully", Toast.LENGTH_SHORT).show()
                 finish()

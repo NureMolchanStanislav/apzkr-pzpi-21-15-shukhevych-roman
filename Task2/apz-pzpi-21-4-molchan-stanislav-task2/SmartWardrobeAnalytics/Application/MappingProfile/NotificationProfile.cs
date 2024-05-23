@@ -1,4 +1,5 @@
 using Application.Models.Dtos;
+using Application.Models.UpdateDtos;
 using AutoMapper;
 using Domain.Entities;
 
@@ -10,5 +11,7 @@ public class NotificationProfile : Profile
     {
         CreateMap<NotificationDto, Notification>();
         CreateMap<Notification, NotificationDto>();
+        CreateMap<NotificationUpdateDto, Notification>();
+        CreateMap<Notification, NotificationUpdateDto>();
     }
 }

@@ -15,6 +15,7 @@ import com.example.smartwardrobeanalytics.adapters.CollectionAdapter
 import com.example.smartwardrobeanalytics.databinding.ActivityMainBinding
 import com.example.smartwardrobeanalytics.dtos.CollectionDto
 import com.example.smartwardrobeanalytics.global.UserSession
+import com.example.smartwardrobeanalytics.interfaces.iretrofit.ApiCallback
 import com.google.android.material.navigation.NavigationView
 import com.onesignal.OneSignal
 import kotlinx.coroutines.CoroutineScope
@@ -84,7 +85,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun fetchCollections() {
         Log.d("MainActivity", "Fetching collections...")
-        apiService.getCollections(1, 15, object : ApiServiceImpl.ApiCallback<List<CollectionDto>> {
+        apiService.getCollections(1, 15, object : ApiCallback<List<CollectionDto>> {
             override fun onSuccess(result: List<CollectionDto>) {
                 Log.d("MainActivity", "Fetched ${result.size} collections")
                 runOnUiThread {

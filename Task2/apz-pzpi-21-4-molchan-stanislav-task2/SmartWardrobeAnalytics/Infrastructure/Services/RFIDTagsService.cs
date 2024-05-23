@@ -74,7 +74,7 @@ public class RFIDTagsService : IRFIDTagsService
         var updateSuccessful = await _rfidTagRepository.UpdateStatus(tagId, cancellationToken);
         var tag = await _rfidTagRepository.GetOneAsync(x=>x.TagId== tagId, cancellationToken);
         var item = await _itemsRepository.GetOneAsync(x => x.Id == tag.ItemId, cancellationToken);
-        var notifications = await _notificationsRepository.GetAllAsync(x => x.ItemId == item.Id, cancellationToken);
+        var notifications = await _notificationsRepository.GetAllAsync(x => x.ItemId == item.Id && !x.IsDeleted, cancellationToken);
         
         if (updateSuccessful)
         {

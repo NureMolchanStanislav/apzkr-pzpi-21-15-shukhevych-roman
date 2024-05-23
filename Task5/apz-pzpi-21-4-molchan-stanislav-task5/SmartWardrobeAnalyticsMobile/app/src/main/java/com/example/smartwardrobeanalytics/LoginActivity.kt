@@ -9,6 +9,7 @@ import com.example.smartwardrobeanalytics.databinding.ActivityLoginBinding
 import com.example.smartwardrobeanalytics.dtos.TokensModel
 import com.example.smartwardrobeanalytics.dtos.User
 import com.example.smartwardrobeanalytics.global.UserSession
+import com.example.smartwardrobeanalytics.interfaces.iretrofit.ApiCallback
 
 class LoginActivity : AppCompatActivity() {
 
@@ -26,13 +27,13 @@ class LoginActivity : AppCompatActivity() {
 
             Log.d("LoginActivity", "Login button clicked. Email: $email, Password: $password")
 
-            apiService.loginUser(email, password, object : ApiServiceImpl.ApiCallback<TokensModel> {
+            apiService.loginUser(email, password, object : ApiCallback<TokensModel> {
                 override fun onSuccess(result: TokensModel) {
                     Log.d("LoginActivity", "Login successful. Tokens: $result")
                     Toast.makeText(this@LoginActivity, "Login successful!", Toast.LENGTH_SHORT).show()
 
                     // Отримайте інформацію про користувача після успішного логіну
-                    apiService.getUser(email, object : ApiServiceImpl.ApiCallback<User> {
+                    apiService.getUser(email, object : ApiCallback<User> {
                         override fun onSuccess(result: User) {
                             Log.d("LoginActivity", "User info retrieved: $result")
                             UserSession.currentUser = result
