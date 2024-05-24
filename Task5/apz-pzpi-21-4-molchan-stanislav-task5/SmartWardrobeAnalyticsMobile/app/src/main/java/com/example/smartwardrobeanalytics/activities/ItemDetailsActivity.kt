@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.ImageView
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.smartwardrobeanalytics.ApiServiceImpl
@@ -14,6 +13,11 @@ import com.example.smartwardrobeanalytics.databinding.ActivityItemDetailsBinding
 import com.example.smartwardrobeanalytics.dtos.StatisticDto
 import com.example.smartwardrobeanalytics.dtos.UsageDto
 import com.example.smartwardrobeanalytics.interfaces.iretrofit.ApiCallback
+import com.github.mikephil.charting.charts.PieChart
+import com.github.mikephil.charting.data.PieData
+import com.github.mikephil.charting.data.PieDataSet
+import com.github.mikephil.charting.data.PieEntry
+import com.github.mikephil.charting.utils.ColorTemplate
 
 class ItemDetailsActivity : AppCompatActivity() {
 
@@ -68,13 +72,34 @@ class ItemDetailsActivity : AppCompatActivity() {
     }
 
     private fun displayItemStatistics(statistics: List<StatisticDto>) {
-        val chartLayout = binding.chartLayout
+        val chart: PieChart = findViewById(R.id.chart)
+        val entries = mutableListOf<PieEntry>()
 
-        statistics.forEach { stat ->
-            val textView = TextView(this)
-            textView.text = "${stat.month}: ${stat.usageCount}"
-            chartLayout.addView(textView)
+        statistics.forEach {
+            try {
+                val parts = it.month.split("-")
+                if (parts.size == 2) {
+                    val monthYear = "${parts[1]}/${parts[0]}"
+                    entries.add(PieEntry(it.usageCount.toFloat(), monthYear))
+                } else {
+                    Log.e("ItemDetailsActivity", "Invalid month format: ${it.month}")
+                }
+            } catch (e: Exception) {
+                Log.e("ItemDetailsActivity", "Error parsing month: ${it.month}", e)
+            }
         }
+
+        if (entries.isEmpty()) {
+            Log.e("ItemDetailsActivity", "No valid entries for the chart")
+            return
+        }
+
+        val dataSet = PieDataSet(entries, "Usage Statistics")
+        dataSet.colors = ColorTemplate.COLORFUL_COLORS.toList() // Set the colors for the chart
+
+        val pieData = PieData(dataSet)
+        chart.data = pieData
+        chart.invalidate() // refresh
     }
 
     private fun fetchItemUsages(itemId: String) {

@@ -1,5 +1,6 @@
 package com.example.smartwardrobeanalytics.activities.createActivities
 
+import android.app.Activity
 import android.os.Bundle
 import android.widget.ArrayAdapter
 import android.widget.Button
@@ -90,6 +91,7 @@ class CreateItemActivity : AppCompatActivity() {
         itemService.createItem(itemCreateDto, object : ApiCallback<Unit> {
             override fun onSuccess(result: Unit) {
                 Toast.makeText(this@CreateItemActivity, "Item created successfully", Toast.LENGTH_SHORT).show()
+                setResult(Activity.RESULT_OK)
                 finish()
             }
 

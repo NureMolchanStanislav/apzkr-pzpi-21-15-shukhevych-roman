@@ -27,6 +27,7 @@
         <activity android:name=".activities.editActivities.EditNotificationActivity" />
         <activity android:name=".activities.createActivities.CreateItemActivity" />
         <activity android:name=".activities.editActivities.EditItemActivity" />
+        <activity android:name=".activities.editActivities.EditCollectionActivity" />
         <activity android:name=".LoginActivity" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

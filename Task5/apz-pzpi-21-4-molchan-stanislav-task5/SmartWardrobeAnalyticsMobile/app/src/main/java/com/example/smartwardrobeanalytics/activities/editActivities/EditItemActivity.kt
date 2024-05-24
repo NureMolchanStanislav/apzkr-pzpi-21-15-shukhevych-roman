@@ -1,5 +1,6 @@
 package com.example.smartwardrobeanalytics.activities.editActivities
 
+import android.app.Activity
 import android.os.Bundle
 import android.widget.ArrayAdapter
 import android.widget.Button
@@ -124,6 +125,7 @@ class EditItemActivity : AppCompatActivity() {
         itemService.updateItem(itemUpdateDto, object : ApiCallback<Unit> {
             override fun onSuccess(result: Unit) {
                 Toast.makeText(this@EditItemActivity, "Item updated successfully", Toast.LENGTH_SHORT).show()
+                setResult(Activity.RESULT_OK)
                 finish()
             }
 

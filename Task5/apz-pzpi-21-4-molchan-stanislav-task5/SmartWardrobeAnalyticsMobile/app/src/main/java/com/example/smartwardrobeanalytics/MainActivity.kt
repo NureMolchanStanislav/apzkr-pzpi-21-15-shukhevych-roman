@@ -11,11 +11,13 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.smartwardrobeanalytics.activities.CreateCollectionActivity
+import com.example.smartwardrobeanalytics.activities.editActivities.EditCollectionActivity
 import com.example.smartwardrobeanalytics.adapters.CollectionAdapter
 import com.example.smartwardrobeanalytics.databinding.ActivityMainBinding
 import com.example.smartwardrobeanalytics.dtos.CollectionDto
 import com.example.smartwardrobeanalytics.global.UserSession
 import com.example.smartwardrobeanalytics.interfaces.iretrofit.ApiCallback
+import com.example.smartwardrobeanalytics.services.CollectionServiceImpl
 import com.google.android.material.navigation.NavigationView
 import com.onesignal.OneSignal
 import kotlinx.coroutines.CoroutineScope
@@ -30,6 +32,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var drawerToggle: ActionBarDrawerToggle
     private lateinit var collectionRecyclerView: RecyclerView
     private val apiService = ApiServiceImpl()
+    private val collectionApi = CollectionServiceImpl()
     private val ONESIGNAL_APP_ID = "2cb74d5d-c9c8-4985-ae88-6ffd94aa43e9"
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,7 +60,7 @@ class MainActivity : AppCompatActivity() {
         val buttonNew: Button = findViewById(R.id.button_new_collection)
         buttonNew.setOnClickListener {
             val intent = Intent(this, CreateCollectionActivity::class.java)
-            startActivity(intent)
+            startActivityForResult(intent, CREATE_COLLECTION_REQUEST_CODE)
         }
 
         // Відображення імені користувача у верхній частині бокового меню
@@ -100,7 +103,31 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun displayCollections(collections: List<CollectionDto>) {
-        val adapter = CollectionAdapter(this, collections)
+        val adapter = CollectionAdapter(this, collections,
+            onEditClick = { collection ->
+                // Запустити EditCollectionActivity для редагування колекції
+                val intent = Intent(this, EditCollectionActivity::class.java)
+                intent.putExtra("collection_id", collection.id)
+                startActivityForResult(intent, EDIT_COLLECTION_REQUEST_CODE)
+            },
+            onDeleteClick = { collection ->
+                // Виконати видалення колекції
+                collectionApi.deleteCollection(collection.id, object : ApiCallback<Unit> {
+                    override fun onSuccess(result: Unit) {
+                        fetchCollections()
+                    }
+
+                    override fun onError(error: String) {
+                        Log.e("MainActivity", "Failed to delete collection: $error")
+                    }
+                })
+            }
+        )
         collectionRecyclerView.adapter = adapter
+    }
+
+    companion object {
+        private const val CREATE_COLLECTION_REQUEST_CODE = 1
+        private const val EDIT_COLLECTION_REQUEST_CODE = 2
     }
 }

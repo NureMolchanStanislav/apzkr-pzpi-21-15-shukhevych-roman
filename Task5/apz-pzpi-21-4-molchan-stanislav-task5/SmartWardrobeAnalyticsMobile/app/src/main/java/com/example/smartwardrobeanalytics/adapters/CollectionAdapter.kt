@@ -6,19 +6,26 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.smartwardrobeanalytics.R
 import com.example.smartwardrobeanalytics.activities.CollectionItemsActivity
 import com.example.smartwardrobeanalytics.dtos.CollectionDto
 
-class CollectionAdapter(private val context: Context, private val collections: List<CollectionDto>) :
-    RecyclerView.Adapter<CollectionAdapter.ViewHolder>() {
+class CollectionAdapter(
+    private val context: Context,
+    private val collections: List<CollectionDto>,
+    private val onEditClick: (CollectionDto) -> Unit,
+    private val onDeleteClick: (CollectionDto) -> Unit
+) : RecyclerView.Adapter<CollectionAdapter.ViewHolder>() {
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val collectionName: TextView = view.findViewById(R.id.collection_name)
         val collectionDescription: TextView = view.findViewById(R.id.collection_description)
         val detailsButton: Button = view.findViewById(R.id.details_button)
+        val editIcon: ImageView = view.findViewById(R.id.edit_icon)
+        val deleteIcon: ImageView = view.findViewById(R.id.delete_icon)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -30,6 +37,7 @@ class CollectionAdapter(private val context: Context, private val collections: L
         val collection = collections[position]
         holder.collectionName.text = collection.name
         holder.collectionDescription.text = collection.description
+
         holder.detailsButton.setOnClickListener {
             val intent = Intent(context, CollectionItemsActivity::class.java).apply {
                 putExtra("collection_id", collection.id)
@@ -37,6 +45,9 @@ class CollectionAdapter(private val context: Context, private val collections: L
             }
             context.startActivity(intent)
         }
+
+        holder.editIcon.setOnClickListener { onEditClick(collection) }
+        holder.deleteIcon.setOnClickListener { onDeleteClick(collection) }
     }
 
     override fun getItemCount() = collections.size

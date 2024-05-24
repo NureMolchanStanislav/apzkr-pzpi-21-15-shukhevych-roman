@@ -3,6 +3,7 @@ package com.example.smartwardrobeanalytics.services
 import com.example.smartwardrobeanalytics.dtos.BrandDto
 import com.example.smartwardrobeanalytics.dtos.CollectionResponse
 import com.example.smartwardrobeanalytics.dtos.CollectionDto
+import com.example.smartwardrobeanalytics.dtos.updateDto.CollectionUpdateDto
 import com.example.smartwardrobeanalytics.interfaces.iretrofit.ApiCallback
 import com.example.smartwardrobeanalytics.interfaces.iservices.IBrandService
 import com.example.smartwardrobeanalytics.interfaces.iservices.ICollectionService
@@ -49,4 +50,56 @@ class CollectionServiceImpl {
             }
         })
     }
+
+    fun getCollectionById(id: String, callback: ApiCallback<CollectionDto>) {
+        // Виклик API для отримання колекції по ID
+        apiService.getCollectionById(id).enqueue(object : Callback<CollectionDto> {
+            override fun onResponse(call: Call<CollectionDto>, response: Response<CollectionDto>) {
+                if (response.isSuccessful) {
+                    callback.onSuccess(response.body()!!)
+                } else {
+                    callback.onError(response.message())
+                }
+            }
+
+            override fun onFailure(call: Call<CollectionDto>, t: Throwable) {
+                callback.onError(t.message ?: "Unknown error")
+            }
+        })
+    }
+
+    fun updateCollection(collectionUpdateDto: CollectionUpdateDto, callback: ApiCallback<Unit>) {
+        // Виклик API для оновлення колекції
+        apiService.updateCollection(collectionUpdateDto).enqueue(object : Callback<Unit> {
+            override fun onResponse(call: Call<Unit>, response: Response<Unit>) {
+                if (response.isSuccessful) {
+                    callback.onSuccess(Unit)
+                } else {
+                    callback.onError(response.message())
+                }
+            }
+
+            override fun onFailure(call: Call<Unit>, t: Throwable) {
+                callback.onError(t.message ?: "Unknown error")
+            }
+        })
+    }
+
+    fun deleteCollection(id: String, callback: ApiCallback<Unit>) {
+        // Виклик API для видалення колекції
+        apiService.deleteCollection(id).enqueue(object : Callback<Unit> {
+            override fun onResponse(call: Call<Unit>, response: Response<Unit>) {
+                if (response.isSuccessful) {
+                    callback.onSuccess(Unit)
+                } else {
+                    callback.onError(response.message())
+                }
+            }
+
+            override fun onFailure(call: Call<Unit>, t: Throwable) {
+                callback.onError(t.message ?: "Unknown error")
+            }
+        })
+    }
+
 }

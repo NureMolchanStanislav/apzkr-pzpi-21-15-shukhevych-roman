@@ -18,6 +18,7 @@ class CollectionItemsActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCollectionItemsBinding
     private val apiService = ItemServiceImpl()
     private lateinit var collectionId: String
+    private lateinit var itemAdapter: ItemAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,6 +31,25 @@ class CollectionItemsActivity : AppCompatActivity() {
         binding.collectionName.text = collectionName
 
         binding.itemRecyclerView.layoutManager = LinearLayoutManager(this)
+        itemAdapter = ItemAdapter(this, mutableListOf(),
+            onEditClick = { item ->
+                val intent = Intent(this, EditItemActivity::class.java)
+                intent.putExtra("item_id", item.id)
+                startActivityForResult(intent, EDIT_ITEM_REQUEST_CODE)
+            },
+            onDeleteClick = { item ->
+                apiService.deleteItem(item.id, object : ApiCallback<Unit> {
+                    override fun onSuccess(result: Unit) {
+                        fetchCollectionItems(collectionId)
+                    }
+
+                    override fun onError(error: String) {
+                        Log.e("CollectionItemsActivity", "Failed to delete item: $error")
+                    }
+                })
+            }
+        )
+        binding.itemRecyclerView.adapter = itemAdapter
 
         binding.buttonCreateItem.setOnClickListener {
             val intent = Intent(this, CreateItemActivity::class.java)
@@ -51,7 +71,7 @@ class CollectionItemsActivity : AppCompatActivity() {
         apiService.getCollectionItems(collectionId, object : ApiCallback<List<ItemDto>> {
             override fun onSuccess(result: List<ItemDto>) {
                 runOnUiThread {
-                    displayCollectionItems(result)
+                    itemAdapter.updateItems(result)
                 }
             }
 
@@ -59,28 +79,6 @@ class CollectionItemsActivity : AppCompatActivity() {
                 Log.e("CollectionItemsActivity", "Failed to fetch collection items: $error")
             }
         })
-    }
-
-    private fun displayCollectionItems(items: List<ItemDto>) {
-        val adapter = ItemAdapter(this, items,
-            onEditClick = { item ->
-                val intent = Intent(this, EditItemActivity::class.java)
-                intent.putExtra("item_id", item.id)
-                startActivityForResult(intent, EDIT_ITEM_REQUEST_CODE)
-            },
-            onDeleteClick = { item ->
-                apiService.deleteItem(item.id, object : ApiCallback<Unit> {
-                    override fun onSuccess(result: Unit) {
-                        fetchCollectionItems(collectionId)
-                    }
-
-                    override fun onError(error: String) {
-                        Log.e("CollectionItemsActivity", "Failed to delete item: $error")
-                    }
-                })
-            }
-        )
-        binding.itemRecyclerView.adapter = adapter
     }
 
     companion object {
