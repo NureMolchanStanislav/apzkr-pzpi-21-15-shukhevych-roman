@@ -22,9 +22,10 @@ public class CollectionsService : ICollectionsService
         _mapper = mapper;
     }
 
-    public async Task<Collection> GetCollectionByIdAsync(string id, CancellationToken cancellationToken)
+    public async Task<CollectionDto> GetCollectionByIdAsync(string id, CancellationToken cancellationToken)
     {
-        return await _collectionsRepository.GetOneAsync(ObjectId.Parse(id), cancellationToken);
+        var result = await _collectionsRepository.GetOneAsync(ObjectId.Parse(id), cancellationToken);
+        return _mapper.Map<CollectionDto>(result);
     }
     
     public async Task<List<CollectionDto>> GetAllAsync(CancellationToken cancellationToken)

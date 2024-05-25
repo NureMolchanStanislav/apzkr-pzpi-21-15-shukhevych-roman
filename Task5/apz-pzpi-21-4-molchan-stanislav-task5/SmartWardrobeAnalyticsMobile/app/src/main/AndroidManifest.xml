@@ -21,13 +21,20 @@
         <activity android:name=".activities.CollectionItemsActivity" />
         <activity android:name=".activities.ItemDetailsActivity" />
         <activity android:name=".activities.CreateCollectionActivity" />
-        <activity android:name=".RegisterActivity" />
+        <activity android:name=".activities.RegisterActivity" />
         <activity android:name=".activities.NotificationsActivity" />
         <activity android:name=".activities.createActivities.CreateNotificationActivity" />
         <activity android:name=".activities.editActivities.EditNotificationActivity" />
         <activity android:name=".activities.createActivities.CreateItemActivity" />
+        <activity android:name=".activities.createActivities.CreateBrandActivity" />
         <activity android:name=".activities.editActivities.EditItemActivity" />
         <activity android:name=".activities.editActivities.EditCollectionActivity" />
+        <activity android:name=".activities.editActivities.EditBrandActivity" />
+        <activity android:name=".activities.ComboStatisticsActivity" />
+        <activity android:name=".activities.SeasonalStatisticsActivity" />
+        <activity android:name=".activities.BrandListActivity" />
+        <activity android:name=".activities.PopularItemsStatisticsActivity" />
+        <activity android:name=".activities.BonusActivity" />
         <activity android:name=".LoginActivity" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

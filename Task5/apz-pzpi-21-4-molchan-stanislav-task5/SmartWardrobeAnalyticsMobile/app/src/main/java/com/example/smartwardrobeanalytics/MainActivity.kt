@@ -3,6 +3,7 @@ package com.example.smartwardrobeanalytics
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.MenuItem
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -10,11 +11,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.smartwardrobeanalytics.activities.BonusActivity
 import com.example.smartwardrobeanalytics.activities.CreateCollectionActivity
 import com.example.smartwardrobeanalytics.activities.editActivities.EditCollectionActivity
 import com.example.smartwardrobeanalytics.adapters.CollectionAdapter
 import com.example.smartwardrobeanalytics.databinding.ActivityMainBinding
 import com.example.smartwardrobeanalytics.dtos.CollectionDto
+import com.example.smartwardrobeanalytics.dtos.RoleDto
 import com.example.smartwardrobeanalytics.global.UserSession
 import com.example.smartwardrobeanalytics.interfaces.iretrofit.ApiCallback
 import com.example.smartwardrobeanalytics.services.CollectionServiceImpl
@@ -55,6 +58,26 @@ class MainActivity : AppCompatActivity() {
         drawerToggle = ActionBarDrawerToggle(this, drawerLayout, binding.toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
         drawerLayout.addDrawerListener(drawerToggle)
         drawerToggle.syncState()
+
+        // Оновити меню в залежності від ролей користувача
+        updateNavigationView(UserSession.currentUser?.roles ?: emptyList())
+
+        navView.setNavigationItemSelectedListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.nav_logout -> {
+                    // Обробка натискання на кнопку Logout
+                    logout()
+                    true
+                }
+                R.id.nav_bonus -> {
+                    // Обробка натискання на кнопку My Bonus
+                    val intent = Intent(this, BonusActivity::class.java)
+                    startActivity(intent)
+                    true
+                }
+                else -> false
+            }
+        }
 
         // Додати кнопку "New"
         val buttonNew: Button = findViewById(R.id.button_new_collection)
@@ -126,8 +149,31 @@ class MainActivity : AppCompatActivity() {
         collectionRecyclerView.adapter = adapter
     }
 
+    private fun logout() {
+        val intent = Intent(this, LoginActivity::class.java)
+        startActivity(intent)
+        finish()
+    }
+
     companion object {
         private const val CREATE_COLLECTION_REQUEST_CODE = 1
         private const val EDIT_COLLECTION_REQUEST_CODE = 2
+    }
+
+    private fun updateNavigationView(roles: List<RoleDto>) {
+        val menu = navView.menu
+        val statisticsItem = menu.findItem(R.id.nav_combo_statistics)
+        statisticsItem.isVisible = roles.any { it.name == "Business" }
+
+        navView.setNavigationItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.nav_logout -> {
+                    // Виконати вихід
+                    logout()
+                    true
+                }
+                else -> false
+            }
+        }
     }
 }

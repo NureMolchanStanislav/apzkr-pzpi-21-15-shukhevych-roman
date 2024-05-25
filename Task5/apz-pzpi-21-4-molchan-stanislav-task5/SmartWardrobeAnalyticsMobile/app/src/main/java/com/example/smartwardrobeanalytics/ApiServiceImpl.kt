@@ -2,6 +2,7 @@ package com.example.smartwardrobeanalytics
 
 import com.example.smartwardrobeanalytics.dtos.*
 import com.example.smartwardrobeanalytics.dtos.сreateDto.CollectionCreateDto
+import com.example.smartwardrobeanalytics.dtos.сreateDto.UserCreateDto
 import com.example.smartwardrobeanalytics.interfaces.iretrofit.ApiCallback
 import com.example.smartwardrobeanalytics.services.NotificationServiceImpl
 import okhttp3.OkHttpClient
@@ -169,6 +170,24 @@ class ApiServiceImpl {
 
             override fun onFailure(call: Call<Void>, t: Throwable) {
                 callback.onError("Create collection request failed: ${t.message}")
+            }
+        })
+    }
+
+    fun registerUser(userCreateDto: UserCreateDto, callback: ApiCallback<Unit>) {
+        val call = apiService.registerUser(userCreateDto)
+
+        call.enqueue(object : Callback<Void> {
+            override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                if (response.isSuccessful) {
+                    callback.onSuccess(Unit)
+                } else {
+                    callback.onError("Registration failed with error code ${response.code()}")
+                }
+            }
+
+            override fun onFailure(call: Call<Void>, t: Throwable) {
+                callback.onError("Registration request failed: ${t.message}")
             }
         })
     }

@@ -2,6 +2,8 @@ package com.example.smartwardrobeanalytics.services
 
 import com.example.smartwardrobeanalytics.dtos.BrandDto
 import com.example.smartwardrobeanalytics.dtos.BrandResponse
+import com.example.smartwardrobeanalytics.dtos.updateDto.BrandUpdateDto
+import com.example.smartwardrobeanalytics.dtos.сreateDto.BrandCreateDto
 import com.example.smartwardrobeanalytics.interfaces.iretrofit.ApiCallback
 import com.example.smartwardrobeanalytics.interfaces.iservices.IBrandService
 import okhttp3.OkHttpClient
@@ -44,6 +46,72 @@ class BrandServiceImpl {
 
             override fun onFailure(call: Call<BrandResponse>, t: Throwable) {
                 callback.onError("Get brands request failed: ${t.message}")
+            }
+        })
+    }
+
+    fun getBrandsByUser(callback: ApiCallback<List<BrandDto>>) {
+        apiService.getBrandsByUser().enqueue(object : Callback<List<BrandDto>> {
+            override fun onResponse(call: Call<List<BrandDto>>, response: Response<List<BrandDto>>) {
+                if (response.isSuccessful) {
+                    response.body()?.let {
+                        callback.onSuccess(it)
+                    } ?: callback.onError("Response body is null")
+                } else {
+                    callback.onError("Failed to get brands: ${response.message()}")
+                }
+            }
+
+            override fun onFailure(call: Call<List<BrandDto>>, t: Throwable) {
+                callback.onError("Error: ${t.message}")
+            }
+        })
+    }
+
+    fun createBrand(brandCreateDto: BrandCreateDto, callback: ApiCallback<Unit>) {
+        apiService.createBrand(brandCreateDto).enqueue(object : Callback<Unit> {
+            override fun onResponse(call: Call<Unit>, response: Response<Unit>) {
+                if (response.isSuccessful) {
+                    callback.onSuccess(Unit)
+                } else {
+                    callback.onError("Failed to create brand: ${response.message()}")
+                }
+            }
+
+            override fun onFailure(call: Call<Unit>, t: Throwable) {
+                callback.onError("Error: ${t.message}")
+            }
+        })
+    }
+
+    fun updateBrand(brandUpdateDto: BrandUpdateDto, callback: ApiCallback<Unit>) {
+        apiService.updateBrand(brandUpdateDto).enqueue(object : Callback<Unit> {
+            override fun onResponse(call: Call<Unit>, response: Response<Unit>) {
+                if (response.isSuccessful) {
+                    callback.onSuccess(Unit)
+                } else {
+                    callback.onError("Failed to update brand: ${response.message()}")
+                }
+            }
+
+            override fun onFailure(call: Call<Unit>, t: Throwable) {
+                callback.onError("Error: ${t.message}")
+            }
+        })
+    }
+
+    fun deleteBrand(id: String, callback: ApiCallback<Unit>) {
+        apiService.deleteBrand(id).enqueue(object : Callback<Unit> {
+            override fun onResponse(call: Call<Unit>, response: Response<Unit>) {
+                if (response.isSuccessful) {
+                    callback.onSuccess(Unit)
+                } else {
+                    callback.onError("Failed to delete brand: ${response.message()}")
+                }
+            }
+
+            override fun onFailure(call: Call<Unit>, t: Throwable) {
+                callback.onError("Error: ${t.message}")
             }
         })
     }

@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <!-- Ваші пункти меню -->
     <item
         android:id="@+id/nav_home"
         android:title="Home"
@@ -13,4 +11,19 @@
         android:id="@+id/nav_logout"
         android:title="Logout"
         android:icon="@android:drawable/ic_lock_power_off" />
+    <item
+        android:id="@+id/nav_combo_statistics"
+        android:title="Combo Statistics"
+        android:icon="@android:drawable/ic_menu_help"
+        android:visible="false" />
+    <item
+        android:id="@+id/nav_seasonal_statistics"
+        android:title="Seasonal Statistics"
+        android:icon="@android:drawable/ic_menu_agenda"
+        android:visible="false" />
+    <item
+        android:id="@+id/nav_popular_items_statistics"
+        android:title="Popular Items Statistics"
+        android:icon="@android:drawable/ic_menu_sort_by_size"
+        android:visible="false" />
 </menu>

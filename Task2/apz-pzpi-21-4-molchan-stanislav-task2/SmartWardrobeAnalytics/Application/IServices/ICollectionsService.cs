@@ -8,7 +8,7 @@ namespace Application.IServices;
 
 public interface ICollectionsService
 {
-    Task<Collection> GetCollectionByIdAsync(string id, CancellationToken cancellationToken);
+    Task<CollectionDto> GetCollectionByIdAsync(string id, CancellationToken cancellationToken);
     Task<Collection> CreateCollectionAsync(CollectionCreateDto collection, CancellationToken cancellationToken);
     Task<CollectionDto> UpdateCollectionAsync(CollectionUpdateDto collection, CancellationToken cancellationToken);
     Task<bool> DeleteCollectionAsync(string id, CancellationToken cancellationToken);

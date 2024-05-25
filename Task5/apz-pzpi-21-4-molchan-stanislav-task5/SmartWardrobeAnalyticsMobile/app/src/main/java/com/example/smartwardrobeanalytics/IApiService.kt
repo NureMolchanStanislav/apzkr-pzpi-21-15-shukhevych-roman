@@ -10,6 +10,7 @@ import com.example.smartwardrobeanalytics.dtos.TokensModel;
 import com.example.smartwardrobeanalytics.dtos.UsageDto
 import com.example.smartwardrobeanalytics.dtos.User
 import com.example.smartwardrobeanalytics.dtos.сreateDto.CollectionCreateDto
+import com.example.smartwardrobeanalytics.dtos.сreateDto.UserCreateDto
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -42,4 +43,7 @@ interface IApiService {
 
     @GET("notifications/get/{id}")
     fun getNotifications(@Path("id") itemId: String): Call<List<NotificationDto>>
+
+    @POST("users/register")
+    fun registerUser(@Body userCreateDto: UserCreateDto): Call<Void>
 }

@@ -3,9 +3,14 @@ package com.example.smartwardrobeanalytics
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.smartwardrobeanalytics.activities.BrandListActivity
+import com.example.smartwardrobeanalytics.MainActivity
+import com.example.smartwardrobeanalytics.activities.RegisterActivity
 import com.example.smartwardrobeanalytics.databinding.ActivityLoginBinding
+import com.example.smartwardrobeanalytics.dtos.RoleDto
 import com.example.smartwardrobeanalytics.dtos.TokensModel
 import com.example.smartwardrobeanalytics.dtos.User
 import com.example.smartwardrobeanalytics.global.UserSession
@@ -32,14 +37,11 @@ class LoginActivity : AppCompatActivity() {
                     Log.d("LoginActivity", "Login successful. Tokens: $result")
                     Toast.makeText(this@LoginActivity, "Login successful!", Toast.LENGTH_SHORT).show()
 
-                    // Отримайте інформацію про користувача після успішного логіну
                     apiService.getUser(email, object : ApiCallback<User> {
                         override fun onSuccess(result: User) {
                             Log.d("LoginActivity", "User info retrieved: $result")
                             UserSession.currentUser = result
-                            // Перехід до MainActivity
-                            val intent = Intent(this@LoginActivity, MainActivity::class.java)
-                            startActivity(intent)
+                            redirectToAppropriateActivity(result.roles)
                             finish()
                         }
 
@@ -56,5 +58,19 @@ class LoginActivity : AppCompatActivity() {
                 }
             })
         }
+
+        binding.btnRegister.setOnClickListener {
+            startActivity(Intent(this, RegisterActivity::class.java))
+        }
+    }
+
+    private fun redirectToAppropriateActivity(roles: List<RoleDto>) {
+        val intent = if (roles.any { it.name == "Business" }) {
+            Intent(this, BrandListActivity::class.java)
+        } else {
+            Intent(this, MainActivity::class.java)
+        }
+        startActivity(intent)
+        finish()
     }
 }
