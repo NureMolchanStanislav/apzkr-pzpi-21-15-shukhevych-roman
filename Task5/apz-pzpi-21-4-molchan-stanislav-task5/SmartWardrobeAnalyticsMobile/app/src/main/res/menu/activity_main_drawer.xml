@@ -1,34 +1,34 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/nav_home"
-        android:title="Home"
+        android:title="@string/home"
         android:icon="@android:drawable/ic_menu_view" />
     <item
         android:id="@+id/nav_bonus"
-        android:title="My Bonus"
+        android:title="@string/my_bonus"
         android:icon="@android:drawable/ic_menu_info_details" />
     <item
         android:id="@+id/nav_logout"
-        android:title="Logout"
+        android:title="@string/logout"
         android:icon="@android:drawable/ic_lock_power_off" />
     <item
         android:id="@+id/nav_combo_statistics"
-        android:title="Combo Statistics"
+        android:title="@string/combo_statistics"
         android:icon="@android:drawable/ic_menu_help"
         android:visible="false" />
     <item
         android:id="@+id/nav_seasonal_statistics"
-        android:title="Seasonal Statistics"
+        android:title="@string/seasonal_statistics"
         android:icon="@android:drawable/ic_menu_agenda"
         android:visible="false" />
     <item
         android:id="@+id/nav_popular_items_statistics"
-        android:title="Popular Items Statistics"
+        android:title="@string/popular_items_statistics"
         android:icon="@android:drawable/ic_menu_sort_by_size"
         android:visible="false" />
     <item
         android:id="@+id/nav_download_csv"
-        android:title="Download CSV"
+        android:title="@string/download_csv"
         android:icon="@android:drawable/ic_menu_save"
         android:visible="false" />
 </menu>
