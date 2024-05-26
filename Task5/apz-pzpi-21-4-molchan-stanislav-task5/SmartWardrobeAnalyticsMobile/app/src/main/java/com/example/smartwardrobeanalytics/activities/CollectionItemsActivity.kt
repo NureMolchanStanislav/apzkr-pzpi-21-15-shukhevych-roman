@@ -28,6 +28,14 @@ class CollectionItemsActivity : AppCompatActivity() {
         collectionId = intent.getStringExtra("collection_id") ?: return
         val collectionName = intent.getStringExtra("collection_name") ?: "Collection Items"
 
+        setSupportActionBar(binding.toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.title = "Collection Items"
+
+        binding.toolbar.setNavigationOnClickListener {
+            finish()
+        }
+
         binding.collectionName.text = collectionName
 
         binding.itemRecyclerView.layoutManager = LinearLayoutManager(this)

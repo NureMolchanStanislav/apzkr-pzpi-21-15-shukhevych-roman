@@ -7,5 +7,15 @@ data class User(
     val phone: String?,
     val email: String?,
     val password: String?,
-    val isDeleted: Boolean
+    var isDeleted: Boolean
+)
+
+data class UserListResponse(
+    val items: List<User>,
+    val pageNumber: Int,
+    val pageSize: Int,
+    val totalPages: Int,
+    val totalItems: Int,
+    val hasPreviousPage: Boolean,
+    val hasNextPage: Boolean
 )

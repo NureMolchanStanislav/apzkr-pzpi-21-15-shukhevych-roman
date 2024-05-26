@@ -35,6 +35,7 @@
         <activity android:name=".activities.BrandListActivity" />
         <activity android:name=".activities.PopularItemsStatisticsActivity" />
         <activity android:name=".activities.BonusActivity" />
+        <activity android:name=".activities.AdminActivity" />
         <activity android:name=".LoginActivity" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

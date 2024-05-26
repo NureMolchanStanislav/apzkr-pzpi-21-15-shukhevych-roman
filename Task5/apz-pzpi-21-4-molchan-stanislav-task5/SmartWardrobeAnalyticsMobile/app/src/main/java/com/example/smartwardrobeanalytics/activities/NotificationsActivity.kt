@@ -14,6 +14,7 @@ import com.example.smartwardrobeanalytics.adapters.NotificationAdapter
 import com.example.smartwardrobeanalytics.dtos.NotificationDto
 import com.example.smartwardrobeanalytics.interfaces.iretrofit.ApiCallback
 import com.example.smartwardrobeanalytics.services.NotificationServiceImpl
+import com.google.android.material.appbar.MaterialToolbar
 
 class NotificationsActivity : AppCompatActivity() {
 
@@ -26,6 +27,15 @@ class NotificationsActivity : AppCompatActivity() {
         setContentView(R.layout.activity_notifications)
 
         val itemId = intent.getStringExtra("item_id") ?: return
+
+        val toolbar: MaterialToolbar = findViewById(R.id.toolbar)
+        setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.title = "Notifications"
+
+        toolbar.setNavigationOnClickListener {
+            finish()
+        }
 
         notificationRecyclerView = findViewById(R.id.notificationRecyclerView)
         notificationRecyclerView.layoutManager = LinearLayoutManager(this)

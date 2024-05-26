@@ -53,24 +53,20 @@ class MainActivity : AppCompatActivity() {
             Log.d("OneSignalToken", "OneSignal Token: $ONESIGNAL_APP_ID")
         }
 
-        // Налаштування Toolbar
         setSupportActionBar(binding.toolbar)
         drawerToggle = ActionBarDrawerToggle(this, drawerLayout, binding.toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
         drawerLayout.addDrawerListener(drawerToggle)
         drawerToggle.syncState()
 
-        // Оновити меню в залежності від ролей користувача
         updateNavigationView(UserSession.currentUser?.roles ?: emptyList())
 
         navView.setNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.nav_logout -> {
-                    // Обробка натискання на кнопку Logout
                     logout()
                     true
                 }
                 R.id.nav_bonus -> {
-                    // Обробка натискання на кнопку My Bonus
                     val intent = Intent(this, BonusActivity::class.java)
                     startActivity(intent)
                     true
@@ -79,29 +75,25 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        // Додати кнопку "New"
         val buttonNew: Button = findViewById(R.id.button_new_collection)
         buttonNew.setOnClickListener {
             val intent = Intent(this, CreateCollectionActivity::class.java)
             startActivityForResult(intent, CREATE_COLLECTION_REQUEST_CODE)
         }
 
-        // Відображення імені користувача у верхній частині бокового меню
         val headerView = navView.getHeaderView(0)
         val userNameTextView: TextView = headerView.findViewById(R.id.user_name)
         userNameTextView.text = UserSession.currentUser?.email ?: "Unknown User"
 
-        // Налаштування RecyclerView для колекцій
         collectionRecyclerView = findViewById(R.id.collectionRecyclerView)
         collectionRecyclerView.layoutManager = LinearLayoutManager(this)
 
-        // Отримання і відображення колекцій
         fetchCollections()
     }
 
     override fun onResume() {
         super.onResume()
-        fetchCollections() // Оновлюємо колекції при поверненні до активності
+        fetchCollections()
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
@@ -128,13 +120,11 @@ class MainActivity : AppCompatActivity() {
     private fun displayCollections(collections: List<CollectionDto>) {
         val adapter = CollectionAdapter(this, collections,
             onEditClick = { collection ->
-                // Запустити EditCollectionActivity для редагування колекції
                 val intent = Intent(this, EditCollectionActivity::class.java)
                 intent.putExtra("collection_id", collection.id)
                 startActivityForResult(intent, EDIT_COLLECTION_REQUEST_CODE)
             },
             onDeleteClick = { collection ->
-                // Виконати видалення колекції
                 collectionApi.deleteCollection(collection.id, object : ApiCallback<Unit> {
                     override fun onSuccess(result: Unit) {
                         fetchCollections()
@@ -168,7 +158,6 @@ class MainActivity : AppCompatActivity() {
         navView.setNavigationItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.nav_logout -> {
-                    // Виконати вихід
                     logout()
                     true
                 }

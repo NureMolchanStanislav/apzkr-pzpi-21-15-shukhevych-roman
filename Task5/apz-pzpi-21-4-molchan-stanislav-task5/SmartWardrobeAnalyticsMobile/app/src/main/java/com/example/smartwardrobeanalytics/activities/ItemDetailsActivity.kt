@@ -10,9 +10,11 @@ import com.example.smartwardrobeanalytics.ApiServiceImpl
 import com.example.smartwardrobeanalytics.R
 import com.example.smartwardrobeanalytics.adapters.ItemUsageAdapter
 import com.example.smartwardrobeanalytics.databinding.ActivityItemDetailsBinding
+import com.example.smartwardrobeanalytics.dialogs.TagSelectionDialog
 import com.example.smartwardrobeanalytics.dtos.StatisticDto
 import com.example.smartwardrobeanalytics.dtos.UsageDto
 import com.example.smartwardrobeanalytics.interfaces.iretrofit.ApiCallback
+import com.example.smartwardrobeanalytics.services.TagServiceImpl
 import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
@@ -23,6 +25,7 @@ class ItemDetailsActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityItemDetailsBinding
     private val apiService = ApiServiceImpl()
+    private val tagService = TagServiceImpl()
     private lateinit var usageAdapter: ItemUsageAdapter
     private var is24HourFormat: Boolean = true
 
@@ -34,26 +37,40 @@ class ItemDetailsActivity : AppCompatActivity() {
         val itemId = intent.getStringExtra("item_id") ?: return
         val itemName = intent.getStringExtra("item_name") ?: "Item Details"
 
+        setSupportActionBar(binding.toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.title = itemName
+
+        binding.toolbar.setNavigationOnClickListener {
+            finish()
+        }
+
         binding.itemName.text = itemName
 
-        // Налаштування RecyclerView для історії використання
         binding.usageRecyclerView.layoutManager = LinearLayoutManager(this)
 
         fetchItemStatistics(itemId)
         fetchItemUsages(itemId)
 
-        // Налаштування перемикача для формату часу
         binding.switchTimeFormat.setOnCheckedChangeListener { _, isChecked ->
             is24HourFormat = isChecked
             usageAdapter.set24HourFormat(is24HourFormat)
         }
 
-        // Додавання кнопки дзвіночка
         val bellIcon: ImageView = findViewById(R.id.bell_icon)
         bellIcon.setOnClickListener {
             val intent = Intent(this, NotificationsActivity::class.java)
             intent.putExtra("item_id", itemId)
             startActivity(intent)
+        }
+
+        val tagIcon: ImageView = findViewById(R.id.tag_icon)
+        tagIcon.setOnClickListener {
+            val dialog = TagSelectionDialog()
+            dialog.setOnTagSelectedListener { tagId ->
+                updateItemTag(tagId, itemId)
+            }
+            dialog.show(supportFragmentManager, "TagSelectionDialog")
         }
     }
 
@@ -99,7 +116,7 @@ class ItemDetailsActivity : AppCompatActivity() {
 
         val pieData = PieData(dataSet)
         chart.data = pieData
-        chart.invalidate() // refresh
+        chart.invalidate()
     }
 
     private fun fetchItemUsages(itemId: String) {
@@ -119,5 +136,17 @@ class ItemDetailsActivity : AppCompatActivity() {
     private fun displayItemUsages(usages: List<UsageDto>) {
         usageAdapter = ItemUsageAdapter(this, usages, is24HourFormat)
         binding.usageRecyclerView.adapter = usageAdapter
+    }
+
+    private fun updateItemTag(tagId: String, itemId: String) {
+        tagService.updateTag(tagId, itemId, object : ApiCallback<Unit> {
+            override fun onSuccess(result: Unit) {
+                Log.d("ItemDetailsActivity", "Tag updated successfully")
+            }
+
+            override fun onError(error: String) {
+                Log.e("ItemDetailsActivity", "Failed to update tag: $error")
+            }
+        })
     }
 }

@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.smartwardrobeanalytics.activities.BrandListActivity
 import com.example.smartwardrobeanalytics.MainActivity
+import com.example.smartwardrobeanalytics.activities.AdminActivity
 import com.example.smartwardrobeanalytics.activities.RegisterActivity
 import com.example.smartwardrobeanalytics.databinding.ActivityLoginBinding
 import com.example.smartwardrobeanalytics.dtos.RoleDto
@@ -65,10 +66,10 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun redirectToAppropriateActivity(roles: List<RoleDto>) {
-        val intent = if (roles.any { it.name == "Business" }) {
-            Intent(this, BrandListActivity::class.java)
-        } else {
-            Intent(this, MainActivity::class.java)
+        val intent = when {
+            roles.any { it.name == "Admin" } -> Intent(this, AdminActivity::class.java)
+            roles.any { it.name == "Business" } -> Intent(this, BrandListActivity::class.java)
+            else -> Intent(this, MainActivity::class.java)
         }
         startActivity(intent)
         finish()

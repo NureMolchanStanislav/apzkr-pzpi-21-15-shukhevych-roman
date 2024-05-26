@@ -26,4 +26,9 @@
         android:title="Popular Items Statistics"
         android:icon="@android:drawable/ic_menu_sort_by_size"
         android:visible="false" />
+    <item
+        android:id="@+id/nav_download_csv"
+        android:title="Download CSV"
+        android:icon="@android:drawable/ic_menu_save"
+        android:visible="false" />
 </menu>
