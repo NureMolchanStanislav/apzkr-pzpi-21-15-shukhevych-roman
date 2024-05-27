@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "461815745015",
+    "project_id": "smartwardrobe-d3ebc",
+    "storage_bucket": "smartwardrobe-d3ebc.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:461815745015:android:779ab9b154826434b786f2",
+        "android_client_info": {
+          "package_name": "com.example.smartwardrobeanalytics"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyClYbrtG-dsYpfYHKZUSjGI6_H7L1e0T2c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

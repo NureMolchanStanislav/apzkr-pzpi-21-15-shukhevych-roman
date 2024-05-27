@@ -1,4 +1,5 @@
 using Domain.Common;
+using MongoDB.Bson;
 
 namespace Domain.Entities;
 
@@ -9,4 +10,6 @@ public class Notification : EntityBase
     public string Title { get; set; }
     
     public string Description { get; set; }
+    
+    public ObjectId ItemId { get; set; }
 }

@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">Smart Wardrobe</string>
+    <string name="new_collection">New Collection</string>
+    <string name="new_item">New Item</string>
+    <string name="new_brand">New Brand</string>
+    <string name="logout">Logout</string>
+    <string name="my_bonus">My Bonus</string>
+    <string name="home">Home</string>
+    <string name="combo_statistics">Combo Statistics</string>
+    <string name="seasonal_statistics">Seasonal Statistics</string>
+    <string name="popular_items_statistics">Popular Items Statistics</string>
+    <string name="download_csv">Download CSV</string>
+    <string name="unknown_user">Unknown User</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+</resources>

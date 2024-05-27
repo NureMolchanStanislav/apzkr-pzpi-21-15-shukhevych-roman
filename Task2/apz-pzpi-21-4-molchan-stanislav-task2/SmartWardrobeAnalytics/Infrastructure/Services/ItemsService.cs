@@ -40,7 +40,13 @@ public class ItemsService : IItemsService
 
     public async Task<ItemDto> CreateItemAsync(ItemCreateDto dto, CancellationToken cancellationToken)
     {
-        var item = _mapper.Map<Item>(dto);
+        var item = new Item()
+        {
+            Name = dto.Name,
+            BrandId = ObjectId.Parse(dto.BrandId),
+            CollectionId = ObjectId.Parse(dto.CollectionId),
+            Description = dto.Description
+        };
         item.CreatedById = GlobalUser.Id;
         item.CreatedDateUtc = DateTime.UtcNow;
 
