@@ -6,8 +6,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.example.smartwardrobeanalytics.ApiServiceImpl
-import com.example.smartwardrobeanalytics.LoginActivity
+import com.example.smartwardrobeanalytics.services.ApiServiceImpl
 import com.example.smartwardrobeanalytics.R
 import com.example.smartwardrobeanalytics.dtos.сreateDto.UserCreateDto
 import com.example.smartwardrobeanalytics.interfaces.iretrofit.ApiCallback

@@ -6,7 +6,7 @@ import android.util.Log
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.smartwardrobeanalytics.ApiServiceImpl
+import com.example.smartwardrobeanalytics.services.ApiServiceImpl
 import com.example.smartwardrobeanalytics.R
 import com.example.smartwardrobeanalytics.adapters.ItemUsageAdapter
 import com.example.smartwardrobeanalytics.databinding.ActivityItemDetailsBinding

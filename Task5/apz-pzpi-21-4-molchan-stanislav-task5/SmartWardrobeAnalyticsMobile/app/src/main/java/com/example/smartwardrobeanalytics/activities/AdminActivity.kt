@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
-import android.view.MenuItem
 import android.widget.EditText
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
@@ -14,8 +13,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.smartwardrobeanalytics.ApiServiceImpl
-import com.example.smartwardrobeanalytics.LoginActivity
 import com.example.smartwardrobeanalytics.R
 import com.example.smartwardrobeanalytics.adapters.UserAdapter
 import com.example.smartwardrobeanalytics.dtos.User

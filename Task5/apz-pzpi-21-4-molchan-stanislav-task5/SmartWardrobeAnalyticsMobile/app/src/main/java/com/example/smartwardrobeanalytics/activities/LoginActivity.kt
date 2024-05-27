@@ -1,15 +1,11 @@
-package com.example.smartwardrobeanalytics
+package com.example.smartwardrobeanalytics.activities
 
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.example.smartwardrobeanalytics.activities.BrandListActivity
-import com.example.smartwardrobeanalytics.MainActivity
-import com.example.smartwardrobeanalytics.activities.AdminActivity
-import com.example.smartwardrobeanalytics.activities.RegisterActivity
+import com.example.smartwardrobeanalytics.services.ApiServiceImpl
 import com.example.smartwardrobeanalytics.databinding.ActivityLoginBinding
 import com.example.smartwardrobeanalytics.dtos.RoleDto
 import com.example.smartwardrobeanalytics.dtos.TokensModel
@@ -26,6 +22,8 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        Log.d("LoginActivity", "Config loaded: ONE_SIGNAL_APP_ID=${Config.ONE_SIGNAL_APP_ID}, BASE_URL=${Config.BASE_URL}")
 
         binding.btnLogin.setOnClickListener {
             val email = binding.etUsername.text.toString()

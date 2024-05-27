@@ -5,13 +5,10 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.example.smartwardrobeanalytics.ApiServiceImpl
+import com.example.smartwardrobeanalytics.services.ApiServiceImpl
 import com.example.smartwardrobeanalytics.R
 import com.example.smartwardrobeanalytics.dtos.сreateDto.CollectionCreateDto
 import com.example.smartwardrobeanalytics.interfaces.iretrofit.ApiCallback
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 class CreateCollectionActivity : AppCompatActivity() {
 

@@ -1,9 +1,8 @@
-package com.example.smartwardrobeanalytics
+package com.example.smartwardrobeanalytics.activities
 
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.view.MenuItem
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -11,8 +10,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.smartwardrobeanalytics.activities.BonusActivity
-import com.example.smartwardrobeanalytics.activities.CreateCollectionActivity
+import com.example.smartwardrobeanalytics.services.ApiServiceImpl
+import com.example.smartwardrobeanalytics.R
 import com.example.smartwardrobeanalytics.activities.editActivities.EditCollectionActivity
 import com.example.smartwardrobeanalytics.adapters.CollectionAdapter
 import com.example.smartwardrobeanalytics.databinding.ActivityMainBinding
@@ -36,25 +35,28 @@ class MainActivity : AppCompatActivity() {
     private lateinit var collectionRecyclerView: RecyclerView
     private val apiService = ApiServiceImpl()
     private val collectionApi = CollectionServiceImpl()
-    private val ONESIGNAL_APP_ID = "2cb74d5d-c9c8-4985-ae88-6ffd94aa43e9"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Config.loadConfig(this)  // Load config here
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         drawerLayout = findViewById(R.id.drawer_layout)
         navView = findViewById(R.id.nav_view)
 
-        OneSignal.initWithContext(this, ONESIGNAL_APP_ID)
+        OneSignal.initWithContext(this, Config.ONE_SIGNAL_APP_ID)
 
         CoroutineScope(Dispatchers.IO).launch {
             OneSignal.Notifications.requestPermission(false)
-            Log.d("OneSignalToken", "OneSignal Token: $ONESIGNAL_APP_ID")
+            Log.d("OneSignalToken", "OneSignal Token: ${Config.ONE_SIGNAL_APP_ID}")
         }
 
         setSupportActionBar(binding.toolbar)
-        drawerToggle = ActionBarDrawerToggle(this, drawerLayout, binding.toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
+        drawerToggle = ActionBarDrawerToggle(this, drawerLayout, binding.toolbar,
+            R.string.navigation_drawer_open,
+            R.string.navigation_drawer_close
+        )
         drawerLayout.addDrawerListener(drawerToggle)
         drawerToggle.syncState()
 

@@ -1,4 +1,4 @@
-package com.example.smartwardrobeanalytics;
+package com.example.smartwardrobeanalytics.interfaces.iservices;
 
 import com.example.smartwardrobeanalytics.dtos.CollectionDto
 import com.example.smartwardrobeanalytics.dtos.CollectionResponse

@@ -1,10 +1,10 @@
-package com.example.smartwardrobeanalytics
+package com.example.smartwardrobeanalytics.services
 
 import com.example.smartwardrobeanalytics.dtos.*
 import com.example.smartwardrobeanalytics.dtos.сreateDto.CollectionCreateDto
 import com.example.smartwardrobeanalytics.dtos.сreateDto.UserCreateDto
 import com.example.smartwardrobeanalytics.interfaces.iretrofit.ApiCallback
-import com.example.smartwardrobeanalytics.services.NotificationServiceImpl
+import com.example.smartwardrobeanalytics.interfaces.iservices.IApiService
 import okhttp3.OkHttpClient
 import retrofit2.Call
 import retrofit2.Callback
@@ -24,7 +24,7 @@ class ApiServiceImpl {
         .build()
 
     private val retrofit = Retrofit.Builder()
-        .baseUrl("http://192.168.50.234:5002/api/")
+        .baseUrl(Config.BASE_URL)
         .addConverterFactory(GsonConverterFactory.create())
         .client(okHttpClient)
         .build()

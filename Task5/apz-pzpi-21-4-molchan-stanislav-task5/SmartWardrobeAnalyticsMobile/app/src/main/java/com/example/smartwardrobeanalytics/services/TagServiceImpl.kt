@@ -20,7 +20,7 @@ class TagServiceImpl {
         .build()
 
     private val retrofit = Retrofit.Builder()
-        .baseUrl("http://192.168.50.234:5002/api/")
+        .baseUrl(Config.BASE_URL)
         .addConverterFactory(GsonConverterFactory.create())
         .client(okHttpClient)
         .build()

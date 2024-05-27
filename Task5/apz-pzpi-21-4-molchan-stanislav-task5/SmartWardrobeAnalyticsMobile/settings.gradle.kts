@@ -24,3 +24,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "SmartWardrobeAnalytics"
 include(":app")
+include(":app:assets")
