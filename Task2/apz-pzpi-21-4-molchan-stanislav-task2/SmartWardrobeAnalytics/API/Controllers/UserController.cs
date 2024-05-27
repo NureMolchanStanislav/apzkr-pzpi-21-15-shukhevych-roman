@@ -64,6 +64,7 @@ public class UserController : BaseController
     }
     
     [HttpDelete("ban/{id}")]
+    
     public async Task<bool> BanUser(string id, CancellationToken cancellationToken)
     {
         return await _userService.BanUser(id, cancellationToken);

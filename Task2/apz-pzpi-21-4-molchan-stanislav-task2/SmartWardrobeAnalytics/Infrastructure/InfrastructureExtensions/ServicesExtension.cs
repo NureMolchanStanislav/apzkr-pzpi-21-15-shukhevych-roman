@@ -6,6 +6,7 @@ using Application.IServices.Identity;
 using Application.IServices.Statistics;
 using Infrastructure.Services;
 using Infrastructure.Services.Identity;
+using Infrastructure.Services.OneSignal;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -28,7 +29,10 @@ public static class ServicesExtension
         services.AddScoped<IUsageService, UsagesService>();
         services.AddScoped<IRFIDTagsService, RFIDTagsService>();
         services.AddScoped<IStatisticsService, StatisticsService>();
+        services.AddScoped<INotificationService, NotificationService>();
 
+        services.AddScoped<OneSignalService>();
+        
         return services;
     }
     

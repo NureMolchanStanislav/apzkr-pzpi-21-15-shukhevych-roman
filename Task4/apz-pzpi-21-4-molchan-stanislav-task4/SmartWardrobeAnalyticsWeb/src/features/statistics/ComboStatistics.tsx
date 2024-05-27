@@ -1,6 +1,5 @@
 /* eslint-disable react-refresh/only-export-components */
-import '../../app/layout/styles.css'; // Зміна шляху до файлу стилів
-/* eslint-disable react-refresh/only-export-components */
+import '../../app/layout/styles.css';
 import React, { useEffect, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import { useStore } from '../../app/stores/store';
@@ -37,7 +36,7 @@ const ComboStatistics = observer(() => {
                 checked={is24HourFormat} 
                 onChange={handleFormatChange} 
                 style={{ marginBottom: '1em' }}
-                className="black-toggle" // Клас для зміни кольору перемикача
+                className="black-toggle"
             />
             <Table celled>
                 <Table.Header>

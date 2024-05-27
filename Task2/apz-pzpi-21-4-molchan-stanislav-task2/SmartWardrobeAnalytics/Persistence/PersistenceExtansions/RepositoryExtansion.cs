@@ -24,6 +24,7 @@ public static class RepositoryExtension
         services.AddScoped<IUsagesRepository, UsagesRepository>();
         services.AddScoped<IRFIDTagsRepository, RFIDTagsRepository>();
         services.AddScoped<IUsageHistoryRepository, UsageHistoryRepository>();
+        services.AddScoped<INotificationsRepository, NotificationsRepository>();
 
         return services;
     }

@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">Розумний Гардероб</string>
+    <string name="new_collection">Нова Колекція</string>
+    <string name="new_item">Новий Предмет</string>
+    <string name="new_brand">Новий Бренд</string>
+    <string name="logout">Вийти</string>
+    <string name="my_bonus">Мої Бонуси</string>
+    <string name="home">Головна</string>
+    <string name="combo_statistics">Статистика Комбінацій</string>
+    <string name="seasonal_statistics">Сезонна Статистика</string>
+    <string name="popular_items_statistics">Статистика Популярних Речей</string>
+    <string name="download_csv">Завантажити CSV</string>
+    <string name="unknown_user">Невідомий Користувач</string>
+    <string name="navigation_drawer_open">Відкрити навігаційне меню</string>
+    <string name="navigation_drawer_close">Закрити навігаційне меню</string>
+</resources>
