@@ -1,3 +1,4 @@
+import json
 import board
 import busio
 import digitalio
@@ -5,9 +6,12 @@ from adafruit_pn532.spi import PN532_SPI
 import requests
 import time
 
-CHECK_EXIST_URL = 'http://192.168.50.234:5002/api/RFIDTags/{tagId}'
-CREATE_TAG_URL = 'http://192.168.50.234:5002/api/RFIDTags/create'
-UPDATE_TAG_URL = 'http://192.168.50.234:5002/api/RFIDTags/updateStatus/{tagId}'
+with open('common/api_routes.json', 'r') as file:
+    routes = json.load(file)
+
+CHECK_EXIST_URL = routes['CHECK_EXIST_URL']
+CREATE_TAG_URL = routes['CREATE_TAG_URL']
+UPDATE_TAG_URL = routes['UPDATE_TAG_URL']
 
 spi = busio.SPI(board.SCK, board.MOSI, board.MISO)
 cs_pin = digitalio.DigitalInOut(board.D7)

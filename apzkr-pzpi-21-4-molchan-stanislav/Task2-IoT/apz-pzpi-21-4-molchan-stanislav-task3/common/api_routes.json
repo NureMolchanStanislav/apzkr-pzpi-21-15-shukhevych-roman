@@ -1,0 +1,6 @@
+{
+    "CHECK_EXIST_URL": "http://192.168.50.234:5002/api/RFIDTags/{tagId}",
+    "CREATE_TAG_URL": "http://192.168.50.234:5002/api/RFIDTags/create",
+    "UPDATE_TAG_URL": "http://192.168.50.234:5002/api/RFIDTags/updateStatus/{tagId}"
+  }
+  
